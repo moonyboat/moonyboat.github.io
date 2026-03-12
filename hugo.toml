@@ -17,7 +17,6 @@ paginate = 10
   # 主页 Profile 模式配置 (取代默认的文章列表显示)
   [params.profileMode]
     enabled = true
-    # 标题和字号的调整现在移到了 assets/css/extended/custom.css 文件中
     title = "👋Hello! I'm Moonyboat!"
     subtitle = '''
 这里是一句你的个人Slogan
@@ -35,14 +34,14 @@ paginate = 10
 🐦 **Twitter**: [@xxx](https://twitter.com/)
 '''
 
-  # 引入自定义 CSS
-  customCSS = ["css/extended/custom.css"]
-
     # 头像图片路径 (存放在根目录下的 static 文件夹中，例如 static/avatar.png)
-    imageUrl = "/avatar.png" 
+    imageUrl = "/avatar.png"
     imageWidth = 150
     imageHeight = 150
     imageTitle = "moonyboat 的头像"
+
+  # 引入自定义 CSS
+  customCSS = ["css/extended/custom.css"]
 
 # 顶部导航菜单配置
 [menu]
