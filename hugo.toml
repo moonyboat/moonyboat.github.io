@@ -1,0 +1,77 @@
+baseURL = "https://moonyboat.github.io/"
+title = "Moonyboat 的博客"
+theme = "PaperMod"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+
+# 开启主页的文章分页功能 (每页显示数量)
+paginate = 10
+
+[params]
+  # 博客作者
+  author = "Moonyboat"
+  # 开启暗黑/明亮模式切换功能 (auto会跟随系统)
+  defaultTheme = "auto"
+  disableThemeToggle = false
+
+  # 主页 Profile 模式配置 (取代默认的文章列表显示)
+  [params.profileMode]
+    enabled = true
+    # 标题和字号的调整现在移到了 assets/css/extended/custom.css 文件中
+    title = "👋Hello! I'm Moonyboat!"
+    subtitle = '''
+这里是一句你的个人 Slogan
+
+🏫 **学校**: 预留
+
+📍 **位置**: 预留
+
+✉️ **邮箱**: [xxx@example.com](mailto:预留邮箱@example.com)
+
+💬 **QQ**: [xxxx](tencent://message/?uin=预留QQ号)
+
+🐙 **GitHub**: [github.com/moonyboat](https://github.com/moonyboat)
+
+🐦 **Twitter**: [@xxx](https://twitter.com/)
+'''
+
+  # 引入自定义 CSS
+  customCSS = ["css/extended/custom.css"]
+
+    # 头像图片路径 (存放在根目录下的 static 文件夹中，例如 static/avatar.png)
+    imageUrl = "/avatar.png" 
+    imageWidth = 150
+    imageHeight = 150
+    imageTitle = "moonyboat 的头像"
+
+# 顶部导航菜单配置
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 10
+
+  [[menu.main]]
+    identifier = "notes"
+    name = "Notes"
+    url = "/notes/"
+    weight = 20
+
+  [[menu.main]]
+    identifier = "daily"
+    name = "Daily"
+    url = "/daily/"
+    weight = 30
+
+  [[menu.main]]
+    identifier = "projects"
+    name = "Projects"
+    url = "/projects/"
+    weight = 40
+
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 50

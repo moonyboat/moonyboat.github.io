@@ -1,0 +1,11 @@
+/* 自定义主页标题大小 */
+.profile_inner h1 {
+    font-size: 3.5rem !important;
+    /* 修改这里调整 👋Hello! I'm Moonyboat! 的大小 */
+}
+
+/* 自定义主页 Slogan 大小 */
+.profile_inner span {
+    font-size: 1.5rem !important;
+    /* 修改这里调整 Slogan 和下方的文字大小 */
+}
