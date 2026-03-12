@@ -1,11 +1,12 @@
-/* 自定义主页标题大小 */
+/* 自定义主页标题大小 - 使用 clamp 实现响应式自适应 */
 .profile_inner h1 {
-    font-size: 3.5rem !important;
-    /* 修改这里调整 👋Hello! I'm Moonyboat! 的大小 */
+    /* 最小值 2.5rem, 首选值 8vw, 最大值 4rem */
+    font-size: clamp(2.5rem, 8vw, 4rem) !important;
 }
 
-/* 自定义主页 Slogan 大小 */
+/* 自定义主页 Slogan 大小 - 使用 clamp 保持自适应比例 */
 .profile_inner span {
-    font-size: 1.5rem !important;
-    /* 修改这里调整 Slogan 和下方的文字大小 */
+    /* 最小值 1.1rem, 首选值 3vw, 最大值 1.5rem */
+    font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
+    line-height: 1.6;
 }

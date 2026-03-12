@@ -14,31 +14,10 @@ paginate = 10
   defaultTheme = "auto"
   disableThemeToggle = false
 
-  # 主页 Profile 模式配置 (取代默认的文章列表显示)
-  [params.profileMode]
-    enabled = true
-    title = "👋Hello! I'm Moonyboat!"
-    subtitle = '''
-这里是一句你的个人Slogan
-
-🏫 **学校**: 预留
-
-📍 **位置**: 预留
-
-✉️ **邮箱**: [xxx@example.com](mailto:预留邮箱@example.com)
-
-💬 **QQ**: [xxxx](tencent://message/?uin=预留QQ号)
-
-🐙 **GitHub**: [github.com/moonyboat](https://github.com/moonyboat)
-
-🐦 **Twitter**: [@xxx](https://twitter.com/)
-'''
-
-    # 头像图片路径 (存放在根目录下的 static 文件夹中，例如 static/avatar.png)
-    imageUrl = "/avatar.png"
-    imageWidth = 150
-    imageHeight = 150
-    imageTitle = "moonyboat 的头像"
+  # 主页 Profile 模式配置已迁移至 content/_index.md
+  # [params.profileMode]
+  #    enabled = true
+  #    ...
 
   # 引入自定义 CSS
   customCSS = ["css/extended/custom.css"]

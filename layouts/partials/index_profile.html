@@ -1,0 +1,54 @@
+<div class="profile">
+    {{- with . -}}
+    <div class="profile_inner">
+        {{- $profileParams := .Params.profileMode -}}
+        {{- if $profileParams.imageUrl -}}
+            {{- $img := resources.Get $profileParams.imageUrl -}}
+            {{- if $img -}}
+                {{/* 自动转换并处理图片: 转换为 WebP 并缩放 */}}
+                {{- $img = $img.Fill (printf "%dx%d webp" ($profileParams.imageWidth | default 150) ($profileParams.imageHeight | default 150)) -}}
+                <img draggable="false" src="{{ $img.RelPermalink }}" 
+                    alt="{{ $profileParams.imageTitle | default "profile image" }}" 
+                    title="{{ $profileParams.imageTitle }}"
+                    height="{{ $profileParams.imageHeight | default 150 }}" 
+                    width="{{ $profileParams.imageWidth | default 150 }}" />
+            {{- else -}}
+                <img draggable="false" src="{{ $profileParams.imageUrl | absURL }}" 
+                    alt="{{ $profileParams.imageTitle | default "profile image" }}" 
+                    title="{{ $profileParams.imageTitle }}"
+                    height="{{ $profileParams.imageHeight | default 150 }}" 
+                    width="{{ $profileParams.imageWidth | default 150 }}" />
+            {{- end -}}
+        {{- end -}}
+
+        <h1>{{ .Title | markdownify }}</h1>
+        
+        {{/* 使用 .Content 来渲染 markdown 里的正文作为 Slogan */}}
+        <div class="profile-content">
+            {{ .Content }}
+        </div>
+
+        {{- partial "social_icons.html" (dict "Context" . "socialIcons" $profileParams.socialIcons) -}}
+
+        {{- with $profileParams.buttons -}}
+        <div class="buttons">
+            {{- range . }}
+            <a class="button" href="{{ trim .url " " }}" rel="noopener" title="{{ .name }}">
+                <span class="button-inner">
+                    {{ .name }}
+                    {{- if (findRE "://" .url) }}&nbsp;
+                    <svg fill="none" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" height="14" width="14">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                        <path d="M15 3h6v6"></path>
+                        <path d="M10 14L21 3"></path>
+                    </svg>
+                    {{- end }}
+                </span>
+            </a>
+            {{- end }}
+        </div>
+        {{- end }}
+    </div>
+    {{- end}}
+</div>
