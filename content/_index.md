@@ -5,8 +5,8 @@ params:
     enabled: true
     title: "👋Hello! I'm Moonyboat!"
     imageUrl: "avatar.png"
-    imageWidth: 150
-    imageHeight: 150
+    imageWidth: 200
+    imageHeight: 200
     imageTitle: "moonyboat 的头像"
     buttons: []
     socialIcons: []
