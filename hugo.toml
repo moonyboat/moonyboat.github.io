@@ -20,7 +20,7 @@ paginate = 10
     # 标题和字号的调整现在移到了 assets/css/extended/custom.css 文件中
     title = "👋Hello! I'm Moonyboat!"
     subtitle = '''
-这里是一句你的个人 Slogan
+这里是一句你的个人Slogan
 
 🏫 **学校**: 预留
 

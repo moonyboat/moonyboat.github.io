@@ -1,6 +1,37 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Moonyboat 的博客</title><link>https://moonyboat.github.io/</link><description>Recent content on Moonyboat 的博客</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Mon, 01 Jan 0001 00:00:00 +0000</lastBuildDate><atom:link href="https://moonyboat.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://moonyboat.github.io/notes/test/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://moonyboat.github.io/notes/test/</guid><description>&lt;h1 id="title"&gt;title&lt;/h1&gt;
-&lt;h2 id="subtitle"&gt;subtitle&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Moonyboat 的博客</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Moonyboat 的博客</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 12 Mar 2026 17:11:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>测试笔记</title>
+      <link>http://localhost:1313/notes/test/</link>
+      <pubDate>Thu, 12 Mar 2026 17:11:00 +0800</pubDate>
+      <guid>http://localhost:1313/notes/test/</guid>
+      <description>&lt;h1 id=&#34;title&#34;&gt;title&lt;/h1&gt;
+&lt;h2 id=&#34;subtitle&#34;&gt;subtitle&lt;/h2&gt;
 &lt;p&gt;123
 abc
 abc
-ABC&lt;/p&gt;</description></item></channel></rss>
+ABC&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>关于我</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Thu, 12 Mar 2026 16:06:29 +0800</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;p&gt;👋 &lt;strong&gt;你好，我是 Moonyboat！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我是一名热爱探索新技术的开发者，目前专注于xxx与xxx领域。这里是我的个人小站，我会在这里记录我的学习心得、日常生活以及一些有趣的开源项目。&lt;/p&gt;
+&lt;p&gt;除了写代码，我平时也喜欢音乐、看电影或是四处走走。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Architechting Agents, Bridging Realities.&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果你对我的项目感兴趣，或者想和我交流技术，欢迎通过主页的邮箱或各种社交账号联系我～&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
