@@ -109,27 +109,30 @@
     position: relative;
     display: flex;
     align-items: flex-start;
-    justify-content: flex-end;
-    padding: 6px;
+    justify-content: flex-start;
+    padding: 7px;
     aspect-ratio: 1;
-    background: var(--tertiary);
+    background: var(--code-bg);
+    border: 1px solid var(--border);
     border-radius: 6px;
-    color: var(--secondary);
+    color: var(--primary);
     font-variant-numeric: tabular-nums;
-    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
 }
 .day-cell.empty {
     background: transparent;
-    box-shadow: inset 0 0 0 1px var(--border);
-    opacity: 0.35;
+    border-color: transparent;
+    box-shadow: none;
 }
 .day-number {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1;
+    font-weight: 600;
+    opacity: 0.88;
 }
 .day-cell.has-log {
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.92);
+    border-color: transparent;
 }
 .day-cell.has-log:hover {
     transform: translateY(-2px) scale(1.04);
@@ -143,16 +146,12 @@
 
 /* 标签颜色定义 */
 .tag-工作 { background: #4a6fa5 !important; }
-.tag-学习 { background: #ffb86c !important; }
-.tag-休息 { background: #50fa7b !important; }
+.tag-学习 { background: #d39a3e !important; }
+.tag-休息 { background: #4aa96c !important; }
 .tag-测试 { background: #8a63d2 !important; }
-.day-cell.tag-休息 { background: #a8d5ba !important; }
-.day-cell.tag-学习 { background: #ecd08c !important; }
-.day-cell.tag-工作 { background: #719ac1 !important; }
-.day-cell.tag-测试 { background: #c8b6ee !important; }
 
 .calendar-tooltip {
-    position: absolute;
+    position: fixed;
     background: var(--entry);
     border: 1px solid var(--tertiary);
     padding: 12px;

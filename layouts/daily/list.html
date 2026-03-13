@@ -55,10 +55,54 @@
     <div class="tooltip-content"></div>
 </div>
 
+<script id="daily-logs-data" type="application/json">
+{{- $dailyLogs | jsonify | safeHTML -}}
+</script>
+
 <script>
-    const dailyLogs = {{ $dailyLogs | jsonify | safeJS }};
+    const dailyLogsDataElement = document.getElementById('daily-logs-data');
+    const dailyLogsRaw = dailyLogsDataElement ? dailyLogsDataElement.textContent.trim() : '[]';
+    const dailyLogsParsed = JSON.parse(dailyLogsRaw || '[]');
+    const dailyLogs = Array.isArray(dailyLogsParsed)
+        ? dailyLogsParsed
+        : JSON.parse(dailyLogsParsed || '[]');
+    const tagPalette = {
+        '工作': {
+            cellBg: '#719ac1',
+            cellColor: '#ffffff',
+            badgeBg: '#4a6fa5',
+            badgeColor: '#ffffff'
+        },
+        '学习': {
+            cellBg: '#ecd08c',
+            cellColor: '#4d3a12',
+            badgeBg: '#d39a3e',
+            badgeColor: '#ffffff'
+        },
+        '休息': {
+            cellBg: '#a8d5ba',
+            cellColor: '#173b21',
+            badgeBg: '#4aa96c',
+            badgeColor: '#ffffff'
+        },
+        '测试': {
+            cellBg: '#c8b6ee',
+            cellColor: '#43246b',
+            badgeBg: '#8a63d2',
+            badgeColor: '#ffffff'
+        },
+        '__default': {
+            cellBg: '#94a3b8',
+            cellColor: '#ffffff',
+            badgeBg: '#64748b',
+            badgeColor: '#ffffff'
+        }
+    };
 
     const tooltip = document.getElementById('calendar-tooltip');
+    const tooltipDate = tooltip.querySelector('.tooltip-date');
+    const tooltipTag = tooltip.querySelector('.tooltip-tag');
+    const tooltipContent = tooltip.querySelector('.tooltip-content');
     const calendarContainer = document.getElementById('daily-calendar-container');
     const timelineContainer = document.getElementById('daily-timeline-container');
     const calendarButton = document.getElementById('calendar-view-btn');
@@ -86,6 +130,10 @@
         return emptyCell;
     }
 
+    function getTagColors(tag) {
+        return tagPalette[tag] || tagPalette.__default;
+    }
+
     function initCalendar(year) {
         const grids = document.querySelectorAll('.month-days-grid');
 
@@ -111,10 +159,16 @@
                 cell.appendChild(dayNumber);
 
                 if (log) {
-                    cell.classList.add('has-log', `tag-${log.tag}`);
+                    const colors = getTagColors(log.tag);
+
+                    cell.classList.add('has-log');
                     cell.dataset.content = log.content;
                     cell.dataset.tag = log.tag;
                     cell.dataset.date = dateStr;
+                    cell.dataset.badgeBg = colors.badgeBg;
+                    cell.dataset.badgeColor = colors.badgeColor;
+                    cell.style.backgroundColor = colors.cellBg;
+                    cell.style.color = colors.cellColor;
                     cell.addEventListener('mouseenter', showTooltip);
                     cell.addEventListener('mouseleave', hideTooltip);
                 }
@@ -131,22 +185,47 @@
     }
 
     function showTooltip(e) {
-        if (!e.target.classList.contains('has-log')) return;
-        
-        const rect = e.target.getBoundingClientRect();
+        const cell = e.currentTarget;
+        if (!cell.classList.contains('has-log')) return;
+
+        const rect = cell.getBoundingClientRect();
+        const spacing = 6;
+        const viewportPadding = 12;
+
+        tooltipDate.textContent = cell.dataset.date;
+        tooltipTag.textContent = cell.dataset.tag;
+        tooltipTag.style.backgroundColor = cell.dataset.badgeBg || '';
+        tooltipTag.style.color = cell.dataset.badgeColor || '#ffffff';
+        tooltipContent.textContent = cell.dataset.content;
+
         tooltip.style.display = 'block';
-        tooltip.querySelector('.tooltip-date').textContent = e.target.dataset.date;
-        tooltip.querySelector('.tooltip-tag').textContent = e.target.dataset.tag;
-        tooltip.querySelector('.tooltip-tag').className = 'tooltip-tag tag-' + e.target.dataset.tag;
-        tooltip.querySelector('.tooltip-content').textContent = e.target.dataset.content;
-        
+        tooltip.style.visibility = 'hidden';
+
         const tooltipRect = tooltip.getBoundingClientRect();
-        tooltip.style.left = (rect.left + window.scrollX - tooltipRect.width/2 + rect.width/2) + 'px';
-        tooltip.style.top = (rect.top + window.scrollY - tooltipRect.height - 10) + 'px';
+        let left = rect.right + spacing;
+        if (left + tooltipRect.width > window.innerWidth - viewportPadding) {
+            left = rect.left - tooltipRect.width - spacing;
+        }
+        if (left < viewportPadding) {
+            left = Math.max(viewportPadding, Math.min(rect.left, window.innerWidth - tooltipRect.width - viewportPadding));
+        }
+
+        let top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+        if (top < viewportPadding) {
+            top = viewportPadding;
+        }
+        if (top + tooltipRect.height > window.innerHeight - viewportPadding) {
+            top = window.innerHeight - tooltipRect.height - viewportPadding;
+        }
+
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+        tooltip.style.visibility = 'visible';
     }
 
     function hideTooltip() {
         tooltip.style.display = 'none';
+        tooltip.style.visibility = 'hidden';
     }
 
     function renderTimeline(year) {
