@@ -1,14 +1,34 @@
-/* 自定义主页标题大小 - 使用 clamp 实现响应式自适应 */
+/* 首页欢迎语：小屏允许自然换行，桌面端尽量保持单行 */
 .profile_inner h1 {
-    /* 最小值 2.5rem, 首选值 8vw, 最大值 4rem */
-    font-size: clamp(2.5rem, 8vw, 4rem) !important;
+    font-size: clamp(2.25rem, 1.55rem + 2.6vw, 3rem) !important;
+    line-height: 1.12;
+    margin: 0 auto;
+    max-inline-size: 11ch;
+    text-wrap: balance;
 }
 
-/* 自定义主页 Slogan 大小 - 使用 clamp 保持自适应比例 */
-.profile_inner span {
-    /* 最小值 1.1rem, 首选值 3vw, 最大值 1.5rem */
-    font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
-    line-height: 1.6;
+.profile-content {
+    max-inline-size: 38rem;
+}
+
+.profile-content > p:first-child {
+    font-size: clamp(1.05rem, 0.95rem + 0.9vw, 1.3rem);
+    line-height: 1.65;
+    color: var(--secondary);
+    max-inline-size: 24ch;
+    margin: 0 auto 1rem;
+}
+
+@media (min-width: 768px) {
+    .profile_inner h1 {
+        max-inline-size: none;
+    }
+}
+
+@media (min-width: 860px) {
+    .profile_inner h1 {
+        white-space: nowrap;
+    }
 }
 
 /* Daily 页面增强样式 */
@@ -18,11 +38,12 @@
     align-items: center;
     gap: 15px;
     margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 .view-switch {
     background: var(--tertiary);
     padding: 4px;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
 }
 .view-switch button {
@@ -31,13 +52,18 @@
     padding: 6px 15px;
     border-radius: 6px;
     cursor: pointer;
-    color: var(--secondary);
+    color: var(--primary);
     font-size: 14px;
+    font-weight: 600;
     transition: all 0.2s;
 }
+.view-switch button:hover {
+    color: var(--primary);
+}
 .view-switch button.active {
-    background: var(--theme);
-    color: white;
+    background: var(--primary);
+    color: var(--theme);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 #year-selector {
     padding: 6px 12px;
@@ -80,26 +106,50 @@
     gap: 6px;
 }
 .day-cell {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 6px;
     aspect-ratio: 1;
     background: var(--tertiary);
-    border-radius: 4px;
-    transition: all 0.2s;
+    border-radius: 6px;
+    color: var(--secondary);
+    font-variant-numeric: tabular-nums;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+.day-cell.empty {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--border);
+    opacity: 0.35;
+}
+.day-number {
+    font-size: 11px;
+    line-height: 1;
 }
 .day-cell.has-log {
     cursor: pointer;
+    color: rgba(255, 255, 255, 0.92);
 }
 .day-cell.has-log:hover {
-    transform: scale(1.2);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
     z-index: 2;
+}
+.day-cell.has-log .day-number {
+    color: inherit;
+    font-weight: 600;
 }
 
 /* 标签颜色定义 */
 .tag-工作 { background: #4a6fa5 !important; }
 .tag-学习 { background: #ffb86c !important; }
 .tag-休息 { background: #50fa7b !important; }
+.tag-测试 { background: #8a63d2 !important; }
 .day-cell.tag-休息 { background: #a8d5ba !important; }
 .day-cell.tag-学习 { background: #ecd08c !important; }
 .day-cell.tag-工作 { background: #719ac1 !important; }
+.day-cell.tag-测试 { background: #c8b6ee !important; }
 
 .calendar-tooltip {
     position: absolute;
@@ -132,6 +182,7 @@
 }
 .timeline-year-header {
     background: var(--tertiary);
+    color: var(--primary);
     padding: 10px 25px;
     border-radius: 20px;
     display: inline-block;
@@ -195,4 +246,21 @@
 .timeline-content {
     color: var(--primary);
     font-size: 14px;
+}
+.timeline-empty {
+    padding-left: 50px;
+    color: var(--secondary);
+}
+
+@media (max-width: 640px) {
+    .daily-controls {
+        justify-content: stretch;
+    }
+    .view-switch,
+    #year-selector {
+        width: 100%;
+    }
+    .view-switch button {
+        flex: 1;
+    }
 }

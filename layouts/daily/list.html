@@ -8,14 +8,11 @@
 </header>
 
 <div class="daily-controls">
-    <div class="view-switch">
-        <button id="calendar-view-btn" class="active">📅 日历</button>
-        <button id="timeline-view-btn">🌿 时间轴</button>
+    <div class="view-switch" role="tablist" aria-label="日记视图切换">
+        <button id="calendar-view-btn" class="active" type="button" aria-pressed="true">📅 日历</button>
+        <button id="timeline-view-btn" type="button" aria-pressed="false">🌿 时间轴</button>
     </div>
-    <select id="year-selector">
-        <option value="2026">2026 年</option>
-        <option value="2025">2025 年</option>
-    </select>
+    <select id="year-selector" aria-label="选择年份"></select>
 </div>
 
 <div id="daily-calendar-container" class="daily-view">
@@ -26,7 +23,7 @@
             <div class="month-days-header">
                 <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
             </div>
-            <div class="month-days-grid" data-month="{{ printf "2026-%02d" $month }}">
+            <div class="month-days-grid" data-month="{{ $month }}">
                 {{/* Days injected by JS */}}
             </div>
         </div>
@@ -36,10 +33,10 @@
 
 <div id="daily-timeline-container" class="daily-view" style="display: none;">
     <div class="timeline-wrapper">
-        <div class="timeline-year-header">2026 年</div>
-        <div class="timeline-line"></div>
-        {{ range $dailyLogs }}
-        <div class="timeline-item">
+        <div id="timeline-year-label" class="timeline-year-header"></div>
+        <div id="timeline-line" class="timeline-line"></div>
+        {{ range sort $dailyLogs "date" "desc" }}
+        <div class="timeline-item" data-year="{{ .date | time | dateFormat "2006" }}">
             <div class="timeline-dot"></div>
             <div class="timeline-date">{{ .date | time | dateFormat "01-02" }}</div>
             <div class="timeline-card">
@@ -48,6 +45,7 @@
             </div>
         </div>
         {{ end }}
+        <div id="timeline-empty" class="timeline-empty" hidden>这一年还没有写下 Daily 记录。</div>
     </div>
 </div>
 
@@ -59,45 +57,79 @@
 
 <script>
     const dailyLogs = {{ $dailyLogs | jsonify | safeJS }};
-    
+
+    const tooltip = document.getElementById('calendar-tooltip');
+    const calendarContainer = document.getElementById('daily-calendar-container');
+    const timelineContainer = document.getElementById('daily-timeline-container');
+    const calendarButton = document.getElementById('calendar-view-btn');
+    const timelineButton = document.getElementById('timeline-view-btn');
+    const yearSelector = document.getElementById('year-selector');
+    const timelineYearLabel = document.getElementById('timeline-year-label');
+    const timelineLine = document.getElementById('timeline-line');
+    const timelineEmpty = document.getElementById('timeline-empty');
+    const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
+    const logsByDate = new Map(dailyLogs.map((log) => [log.date, log]));
+    const fallbackYear = new Date().getFullYear();
+    const availableYears = Array.from(
+        new Set(
+            dailyLogs
+                .map((log) => Number(log.date.slice(0, 4)))
+                .concat([fallbackYear, fallbackYear - 1])
+                .filter(Number.isFinite)
+        )
+    ).sort((a, b) => b - a);
+
+    function createEmptyCell() {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'day-cell empty';
+        emptyCell.setAttribute('aria-hidden', 'true');
+        return emptyCell;
+    }
+
     function initCalendar(year) {
         const grids = document.querySelectorAll('.month-days-grid');
-        grids.forEach(grid => {
-            const [y, m] = grid.dataset.month.split('-').map(Number);
+
+        grids.forEach((grid) => {
+            const month = Number(grid.dataset.month);
             grid.innerHTML = '';
-            
-            let firstDay = new Date(y, m - 1, 1).getDay();
-            if (firstDay === 0) firstDay = 7; 
-            
-            for (let i = 1; i < firstDay; i++) {
-                const empty = document.createElement('div');
-                empty.className = 'day-cell empty';
-                grid.appendChild(empty);
+
+            const firstDayOffset = (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() + 6) % 7;
+            for (let i = 0; i < firstDayOffset; i++) {
+                grid.appendChild(createEmptyCell());
             }
-            
-            const daysInMonth = new Date(y, m, 0).getDate();
-            for (let d = 1; d <= daysInMonth; d++) {
-                const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                const log = dailyLogs.find(l => l.date === dateStr);
-                
+
+            const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const log = logsByDate.get(dateStr);
                 const cell = document.createElement('div');
+                const dayNumber = document.createElement('span');
+
                 cell.className = 'day-cell';
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                cell.appendChild(dayNumber);
+
                 if (log) {
-                    cell.classList.add('has-log');
-                    cell.classList.add(`tag-${log.tag}`);
+                    cell.classList.add('has-log', `tag-${log.tag}`);
                     cell.dataset.content = log.content;
                     cell.dataset.tag = log.tag;
                     cell.dataset.date = dateStr;
+                    cell.addEventListener('mouseenter', showTooltip);
+                    cell.addEventListener('mouseleave', hideTooltip);
                 }
-                
-                cell.addEventListener('mouseenter', showTooltip);
-                cell.addEventListener('mouseleave', hideTooltip);
+
                 grid.appendChild(cell);
+            }
+
+            const totalCells = firstDayOffset + daysInMonth;
+            const trailingEmptyCount = (7 - (totalCells % 7)) % 7;
+            for (let i = 0; i < trailingEmptyCount; i++) {
+                grid.appendChild(createEmptyCell());
             }
         });
     }
 
-    const tooltip = document.getElementById('calendar-tooltip');
     function showTooltip(e) {
         if (!e.target.classList.contains('has-log')) return;
         
@@ -117,22 +149,66 @@
         tooltip.style.display = 'none';
     }
 
-    document.getElementById('calendar-view-btn').addEventListener('click', () => {
-        document.getElementById('daily-calendar-container').style.display = 'block';
-        document.getElementById('daily-timeline-container').style.display = 'none';
-        document.getElementById('calendar-view-btn').classList.add('active');
-        document.getElementById('timeline-view-btn').classList.remove('active');
+    function renderTimeline(year) {
+        let visibleCount = 0;
+
+        timelineItems.forEach((item) => {
+            const isVisible = Number(item.dataset.year) === year;
+            item.hidden = !isVisible;
+            if (isVisible) {
+                visibleCount += 1;
+            }
+        });
+
+        timelineYearLabel.textContent = `${year} 年`;
+        timelineLine.hidden = visibleCount === 0;
+        timelineEmpty.hidden = visibleCount !== 0;
+    }
+
+    function setActiveView(view) {
+        const isCalendarView = view === 'calendar';
+
+        calendarContainer.style.display = isCalendarView ? 'block' : 'none';
+        timelineContainer.style.display = isCalendarView ? 'none' : 'block';
+        calendarButton.classList.toggle('active', isCalendarView);
+        timelineButton.classList.toggle('active', !isCalendarView);
+        calendarButton.setAttribute('aria-pressed', String(isCalendarView));
+        timelineButton.setAttribute('aria-pressed', String(!isCalendarView));
+    }
+
+    function populateYearSelector(initialYear) {
+        yearSelector.innerHTML = availableYears
+            .map((year) => `<option value="${year}">${year} 年</option>`)
+            .join('');
+        yearSelector.value = String(initialYear);
+    }
+
+    function syncYear(year) {
+        initCalendar(year);
+        renderTimeline(year);
+        yearSelector.value = String(year);
+    }
+
+    calendarButton.addEventListener('click', () => {
+        setActiveView('calendar');
     });
 
-    document.getElementById('timeline-view-btn').addEventListener('click', () => {
-        document.getElementById('daily-calendar-container').style.display = 'none';
-        document.getElementById('daily-timeline-container').style.display = 'block';
-        document.getElementById('calendar-view-btn').classList.remove('active');
-        document.getElementById('timeline-view-btn').classList.add('active');
+    timelineButton.addEventListener('click', () => {
+        setActiveView('timeline');
+    });
+
+    yearSelector.addEventListener('change', (event) => {
+        const selectedYear = Number(event.target.value);
+        if (Number.isFinite(selectedYear)) {
+            syncYear(selectedYear);
+        }
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-        initCalendar(2026);
+        const initialYear = availableYears[0];
+        populateYearSelector(initialYear);
+        syncYear(initialYear);
+        setActiveView('calendar');
     });
 </script>
 
