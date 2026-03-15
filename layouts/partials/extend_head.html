@@ -1,0 +1,34 @@
+{{- $faviconVersion := "20260315-3" -}}
+{{- $faviconIco := printf "%s?v=%s" ("favicon-v2.ico" | relURL) $faviconVersion -}}
+{{- $favicon16 := printf "%s?v=%s" ("favicon-16x16-v2.png" | relURL) $faviconVersion -}}
+{{- $favicon32 := printf "%s?v=%s" ("favicon-32x32-v2.png" | relURL) $faviconVersion -}}
+{{- $appleTouch := printf "%s?v=%s" ("apple-touch-icon-v2.png" | relURL) $faviconVersion -}}
+<script>
+    // Replace theme-provided icon links with cache-busted files so local browsers refresh the tab icon reliably.
+    (() => {
+        const iconLinks = [
+            { rel: 'icon', type: 'image/x-icon', href: '{{ $faviconIco }}' },
+            { rel: 'icon', type: 'image/png', sizes: '16x16', href: '{{ $favicon16 }}' },
+            { rel: 'icon', type: 'image/png', sizes: '32x32', href: '{{ $favicon32 }}' },
+            { rel: 'apple-touch-icon', href: '{{ $appleTouch }}' },
+            { rel: 'shortcut icon', type: 'image/x-icon', href: '{{ $faviconIco }}' }
+        ];
+
+        document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]').forEach((node) => {
+            node.remove();
+        });
+
+        iconLinks.forEach((item) => {
+            const link = document.createElement('link');
+            link.rel = item.rel;
+            link.href = item.href;
+            if (item.type) {
+                link.type = item.type;
+            }
+            if (item.sizes) {
+                link.sizes = item.sizes;
+            }
+            document.head.appendChild(link);
+        });
+    })();
+</script>

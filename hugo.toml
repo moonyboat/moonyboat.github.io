@@ -22,6 +22,12 @@ paginate = 10
   # 引入自定义 CSS
   customCSS = ["css/extended/custom.css"]
 
+  [params.assets]
+  favicon = "favicon-v2.ico"
+  favicon16x16 = "favicon-16x16-v2.png"
+  favicon32x32 = "favicon-32x32-v2.png"
+  apple_touch_icon = "apple-touch-icon-v2.png"
+
 # 顶部导航菜单配置
 [menu]
   [[menu.main]]
