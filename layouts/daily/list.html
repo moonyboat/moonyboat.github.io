@@ -234,6 +234,7 @@
         timelineItems.forEach((item) => {
             const isVisible = Number(item.dataset.year) === year;
             item.hidden = !isVisible;
+            item.style.display = isVisible ? 'flex' : 'none';
             if (isVisible) {
                 visibleCount += 1;
             }
@@ -241,7 +242,9 @@
 
         timelineYearLabel.textContent = `${year} 年`;
         timelineLine.hidden = visibleCount === 0;
+        timelineLine.style.display = visibleCount === 0 ? 'none' : 'block';
         timelineEmpty.hidden = visibleCount !== 0;
+        timelineEmpty.style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
     function setActiveView(view) {

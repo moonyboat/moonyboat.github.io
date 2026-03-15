@@ -8,7 +8,9 @@
 }
 
 .profile-content {
+    --profile-info-offset: 12rem; /* 桌面端信息偏移量 */
     max-inline-size: 38rem;
+    width: min(100%, 34rem);
 }
 
 .profile-content > p:first-child {
@@ -17,6 +19,13 @@
     color: var(--secondary);
     max-inline-size: 24ch;
     margin: 0 auto 1rem;
+}
+
+.profile-content > p:not(:first-child) {
+    text-align: left;
+    width: max-content;
+    max-width: 100%;
+    transform: translateX(var(--profile-info-offset));
 }
 
 @media (min-width: 768px) {
@@ -28,6 +37,18 @@
 @media (min-width: 860px) {
     .profile_inner h1 {
         white-space: nowrap;
+    }
+}
+
+@media (max-width: 640px) {
+    .profile-content {
+        --profile-info-offset: 0;
+        width: min(100%, 28rem);
+    }
+
+    .profile-content > p:not(:first-child) {
+        width: 100%;
+        transform: none;
     }
 }
 
@@ -204,6 +225,9 @@
     align-items: center;
     gap: 15px;
 }
+.timeline-item[hidden] {
+    display: none !important;
+}
 .timeline-dot {
     position: absolute;
     left: 16px;
@@ -249,6 +273,10 @@
 .timeline-empty {
     padding-left: 50px;
     color: var(--secondary);
+}
+.timeline-line[hidden],
+.timeline-empty[hidden] {
+    display: none !important;
 }
 
 @media (max-width: 640px) {
