@@ -1,3 +1,18 @@
+{{- $backgroundLight := resources.Get "images/background_light.png" -}}
+{{- $backgroundDark := resources.Get "images/background_dark.png" -}}
+{{- if or $backgroundLight $backgroundDark -}}
+<style>
+    :root {
+        {{- with $backgroundLight }}
+        --site-background-image-light: url('{{ .RelPermalink }}');
+        {{- end }}
+        {{- with $backgroundDark }}
+        --site-background-image-dark: url('{{ .RelPermalink }}');
+        {{- end }}
+    }
+</style>
+{{- end -}}
+
 {{- $faviconVersion := "20260315-3" -}}
 {{- $faviconIco := printf "%s?v=%s" ("favicon-v2.ico" | relURL) $faviconVersion -}}
 {{- $favicon16 := printf "%s?v=%s" ("favicon-16x16-v2.png" | relURL) $faviconVersion -}}
