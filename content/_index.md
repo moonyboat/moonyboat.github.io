@@ -16,11 +16,11 @@ params:
 
 🏫 **学校**: 预留
 
-📍 **位置**: 中国，沈阳
+📍 **位置**: 中国·沈阳
 
 ✉️ **邮箱**: [xxx@example.com](mailto:预留邮箱@example.com)
 
-💬 **QQ**: [2523710142](tencent://message/?uin=2523710142)
+💬 **QQ**  : [2523710142](tencent://message/?uin=2523710142)
 
 🐙 **GitHub**: [github.com/moonlight716](https://github.com/moonlight716)
 
