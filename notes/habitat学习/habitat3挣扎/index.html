@@ -1,0 +1,349 @@
+<!doctype html><html lang=zh-cn dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Habitat3 挣扎 | Moonyboat 的博客</title><meta name=keywords content="Habitat,Conda"><meta name=description content="安装Habitat3的心路历程"><meta name=author content="Moonyboat"><link rel=canonical href=https://moonyboat.github.io/notes/habitat%E5%AD%A6%E4%B9%A0/habitat3%E6%8C%A3%E6%89%8E/><link crossorigin=anonymous href=/assets/css/stylesheet.f90abd397df18001083e9bef38acf77289680d08d8818320f0f11229d0483ff7.css integrity="sha256-+Qq9OX3xgAEIPpvvOKz3coloDQjYgYMg8PESKdBIP/c=" rel="preload stylesheet" as=style><link rel=icon href=https://moonyboat.github.io/favicon-v2.ico><link rel=icon type=image/png sizes=16x16 href=https://moonyboat.github.io/favicon-16x16-v2.png><link rel=icon type=image/png sizes=32x32 href=https://moonyboat.github.io/favicon-32x32-v2.png><link rel=apple-touch-icon href=https://moonyboat.github.io/apple-touch-icon-v2.png><link rel=mask-icon href=https://moonyboat.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=zh-cn href=https://moonyboat.github.io/notes/habitat%E5%AD%A6%E4%B9%A0/habitat3%E6%8C%A3%E6%89%8E/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><style>:root{--site-background-image-light:url('/images/background_light.png');--site-background-image-dark:url('/images/background_dark.png')}</style><script>(()=>{const e=[{rel:"icon",type:"image/x-icon",href:"/favicon-v2.ico?v=20260315-3"},{rel:"icon",type:"image/png",sizes:"16x16",href:"/favicon-16x16-v2.png?v=20260315-3"},{rel:"icon",type:"image/png",sizes:"32x32",href:"/favicon-32x32-v2.png?v=20260315-3"},{rel:"apple-touch-icon",href:"/apple-touch-icon-v2.png?v=20260315-3"},{rel:"shortcut icon",type:"image/x-icon",href:"/favicon-v2.ico?v=20260315-3"}];document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]').forEach(e=>{e.remove()}),e.forEach(e=>{const t=document.createElement("link");t.rel=e.rel,t.href=e.href,e.type&&(t.type=e.type),e.sizes&&(t.sizes=e.sizes),document.head.appendChild(t)})})()</script><meta property="og:url" content="https://moonyboat.github.io/notes/habitat%E5%AD%A6%E4%B9%A0/habitat3%E6%8C%A3%E6%89%8E/"><meta property="og:site_name" content="Moonyboat 的博客"><meta property="og:title" content="Habitat3 挣扎"><meta property="og:description" content="安装Habitat3的心路历程"><meta property="og:locale" content="zh_cn"><meta property="og:type" content="article"><meta property="article:section" content="notes"><meta property="article:published_time" content="2026-03-20T22:00:00+08:00"><meta property="article:modified_time" content="2026-03-20T22:00:00+08:00"><meta property="article:tag" content="Habitat"><meta property="article:tag" content="Conda"><meta name=twitter:card content="summary"><meta name=twitter:title content="Habitat3 挣扎"><meta name=twitter:description content="安装Habitat3的心路历程"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Notes","item":"https://moonyboat.github.io/notes/"},{"@type":"ListItem","position":2,"name":"Habitat3 挣扎","item":"https://moonyboat.github.io/notes/habitat%E5%AD%A6%E4%B9%A0/habitat3%E6%8C%A3%E6%89%8E/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Habitat3 挣扎","name":"Habitat3 挣扎","description":"安装Habitat3的心路历程","keywords":["Habitat","Conda"],"articleBody":"source /home/zyg/anaconda3/etc/profile.d/conda.sh conda activate habitat3 export LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu export LD_PRELOAD=/lib/x86_64-linux-gnu/libEGL_nvidia.so.0:/lib/x86_64-linux-gnu/libGLX_nvidia.so.0 export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json export __GLX_VENDOR_LIBRARY_NAME=nvidia export __NV_PRIME_RENDER_OFFLOAD=1 python /home/zyg/habitat3_ws/habitat-lab/verify_display.py import sys import os # 替换下面的路径为你实际的 egg 文件路径 sys.path.append(\"/home/zyg/anaconda3/envs/habitat3/lib/python3.9/site-packages/habitat_sim-0.3.3-py3.9-linux-x86_64.egg\") import habitat_sim # 1. 场景路径 test_scene = \"data/scene_datasets/habitat-test-scenes/apartment_1.glb\" if not os.path.exists(test_scene): print(\"❌ 场景文件不存在，请检查路径\") exit() # 2. 配置仿真器 sim_cfg = habitat_sim.SimulatorConfiguration() sim_cfg.scene_id = test_scene sim_cfg.enable_physics = True # 尝试指定 GPU 0 (NVIDIA) #sim_cfg.gpu_device_id = 0 # 3. 配置传感器 agent_cfg = habitat_sim.agent.AgentConfiguration() rgb_sensor = habitat_sim.CameraSensorSpec() rgb_sensor.uuid = \"color_sensor\" rgb_sensor.sensor_type = habitat_sim.SensorType.COLOR rgb_sensor.sensor_subtype = habitat_sim.SensorSubType.PINHOLE rgb_sensor.resolution = [512, 512] rgb_sensor.position = [0.0, 1.5, 0.0] agent_cfg.sensor_specifications = [rgb_sensor] cfg = habitat_sim.Configuration(sim_cfg, [agent_cfg]) print(\"🚀 正在尝试初始化仿真器 (Python版)...\") try: # 这里是关键：看 Python 能否成功创建上下文 sim = habitat_sim.Simulator(cfg) print(\"✅ 仿真器初始化成功！\") # 尝试渲染一帧 agent = sim.initialize_agent(0) obs = sim.step(\"move_forward\") if \"color_sensor\" in obs: print(f\"✅ 成功获取图像数据！尺寸: {obs['color_sensor'].shape}\") print(\"🎉 结论：你的环境可以正常运行 Python 代码！不用管 habitat-viewer 的报错了。\") else: print(\"⚠️ 初始化成功但未获取到图像。\") sim.close() except Exception as e: print(f\"❌ Python 初始化也失败了: {e}\") source /home/zyg/anaconda3/etc/profile.d/conda.sh conda activate habitat3 cd /home/zyg/habitat3_ws/habitat-lab python -m habitat_sim.utils.datasets_download --uids replica_cad_dataset --data-path data/ python -m habitat_sim.utils.datasets_download --uids hab_fetch --data-path data/ python -m habitat_sim.utils.datasets_download --uids ycb --data-path data/ export LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu export LD_PRELOAD=/lib/x86_64-linux-gnu/libEGL_nvidia.so.0:/lib/x86_64-linux-gnu/libGLX_nvidia.so.0 export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json export __GLX_VENDOR_LIBRARY_NAME=nvidia export __NV_PRIME_RENDER_OFFLOAD=1 SDL_VIDEODRIVER=x11 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml python examples/interactive_play.py --no-render --save-obs --save-obs-fname play.mp4 #确认数据集完整性 ls -l data/replica_cad/scene_dataset_config.json ls -l data/replica_cad/navmeshes/v3_sc4_staging_00.navmesh ls -l data/robots/hab_fetch/fetch_no_base.urdf ls -l data/objects/ycb/ycb.scene_dataset_config.json ls -l data/datasets/replica_cad/rearrange trouble\n# 故障排除 这是一份常见问题列表以及相应的故障排除提示。 如果在Github上提交问题，请包含以下内容： * 关于您环境的信息（操作系统、显卡等）。 * 你已经尝试过的故障排除步骤。 * 截图（如适用）。 - [常见问题](#常见问题) - [Habitat-Lab interactive_play.py](#habitat-lab-interactive_playpy) - [无法创建上下文](#无法创建上下文) - [NVIDIA A100上的黑色方块](#black-squares-on-nvidia-a100) - [图形故障排除技巧](#图形故障排除技巧) - [通用提示](#通用提示) - [Linux](#linux) - [Windows](#windows) ## 常见问题 ### Habitat-Lab interactive_play.py 在某些系统上，`examples/interactive_play.py`会因以下错误而崩溃： X 失败请求的错误：BadAccess（尝试访问私有资源被拒绝） 这是一个与底层`pygame`库如何与Habitat交互相关的持续问题。`interactive_play`脚本的替代方案已在[路线图](habitat-hitl/README.md)中列出。 ### 无法创建上下文 在某些系统上，无法找到有效的GPU： Platform::WindowlessEglApplication::tryCreateContext()：在总共2个EGL设备中，无法找到CUDA设备0 无窗口上下文：无法创建无窗口上下文 这通常是由以下原因引起的： * 图形驱动程序已过时、缺失或无效。 * 在 Linux 上，这可能是由于缺少或不完整的 `libglvnd` 安装。 请按照[以下](#graphics-troubleshooting-tips)的图形故障排除步骤进行操作。如果问题仍然存在，请随时在Github上提交问题。 ### NVIDIA A100上的黑色方块 NVIDIA A100 GPU可能会导致Habitat传感器在某些环境中渲染出黑色矩形瑕疵。 如果您的设置出现此问题，请将CUDA驱动程序更新到最新版本（至少12.2）。 参见：https://github.com/facebookresearch/habitat-sim/issues/2310 ## 图形故障排除技巧 这些步骤旨在缩小与图形相关问题的范围。 #### 一般提示 1. 提高日志记录的详细程度。 使用以下环境变量启动应用程序： * `HABITAT_SIM_LOG=Debug` * 可选值，从最详细到最简略依次为：`VeryVerbose`、`Verbose`/`Debug`、`Warning`（默认值）、`Error`。 * `MAGNUM_LOG=verbose` * 可选值，从最详细到最简洁依次为：`verbose`、`default`、`quiet`。 * `MAGNUM_GPU_VALIDATION=ON` 2. 获取测试资源。 * 在`habitat-lab`或`habitat-sim`存储库的根目录下，运行以下命令：`python -m habitat_sim.utils.datasets_download --uids habitat_test_scenes --data-path data/` 3. 通过运行基础查看器来验证问题是否出现在最小配置上。 * 使用`habitat-sim` Conda包： * `MAGNUM_LOG=verbose MAGNUM_GPU_VALIDATION=ON habitat-viewer data/scene_datasets/habitat-test-scenes/skokloster-castle.glb` * 使用从源代码构建的`habitat-sim`： * `MAGNUM_LOG=verbose MAGNUM_GPU_VALIDATION=ON {habitat-sim}/build/viewer data/scene_datasets/habitat-test-scenes/skokloster-castle.glb` 4. 从头开始创建一个新的conda环境。一段时间后，该环境可能会偏离基线，从而导致冲突的出现。 #### Linux 1. *(NVIDIA)* 运行 `nvidia-smi` 命令。输出结果的首部应显示预期的驱动程序和 CUDA 版本。例如： ```NVIDIA-SMI 535.129.03 驱动程序版本：535.129.03 CUDA版本：12.2``` 如果命令返回错误或出现意外版本，请重新安装NVIDIA驱动程序。 2. 命令“eglinfo”应能正常运行，无错误。 * *(NVIDIA, AMD)* 该命令应指示您的硬件GPU可用。 3. *(NVIDIA)* 请确保已安装并正确配置了`libglvnd`。此项配置经常被错误安装。 1. 检查是否已安装`libglvnd`。 * 基于Debian的系统：`apt list --installed | grep libglvnd` * 基于RPM：`dnf list installed | grep libglvnd` 2. 确保存在针对NVIDIA的有效条目。 在 `/usr/share/glvnd/egl_vendor.d/` 目录下（具体路径可能有所不同），请确保存在一个名为 `10_nvidia.json` 的条目。如果不存在，您可以尝试手动创建它。 * 此文件应包含以下内容： ``` { \"file_format_version\" : \"1.0.0\",， \"ICD\" : { “library_path” : “libEGL_nvidia.so.0” } } ``` * `library_path`字段应指向正确的NVIDIA EGL库。该库可通过命令`ldconfig -p | grep libEGL`找到。库`libEGL_nvidia`随NVIDIA驱动程序打包 - 如果缺失，请重新安装驱动程序。如果存在多个实例，则可能是驱动程序安装错误。 4. *(CPU渲染)* 如果你没有GPU，请确保你的CPU显卡驱动正常工作。 5. 如果在Wayland上运行，请尝试使用X11，反之亦然。虽然Habitat在两种显示协议下都应能正常工作，但这或许能揭示问题所在。 运行sc0-3\ncd /home/zyg/habitat3_ws/habitat-lab conda activate habitat3 # 如果你之前需要这个才能跑通渲染 export __NV_PRIME_RENDER_OFFLOAD=1 # sc0–sc2 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=train # sc3 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=val habitat-hitl解决方案 readme\n# 人机交互（HITL）框架 HITL框架将真实的人类用户带入Habitat虚拟环境。利用该框架构建交互式桌面和虚拟现实（VR）应用程序，使用户能够与模拟机器人和其他虚拟代理进行交互。将这些应用程序部署给用户，以收集交互数据，用于代理评估和训练。 HITL框架由`habitat-hitl` Python库、示例[桌面应用程序](../examples/hitl/)，以及我们基于Unity的[VR客户端](../examples/hitl/pick_throw_vr/README.md#vr)组成。 该框架基于`habitat-lab`和`habitat-baselines`构建。它提供了封装器，用于实时加载、模拟和渲染Habitat环境，包括虚拟代理和策略推理。为了使用户能够与这些代理进行交互，该框架提供了图形用户界面（GUI），包括一个带有3D视口的窗口、相机控制和化身控制助手，以及虚拟现实（VR）集成。 - [人机交互（HITL）框架](#人机交互-hitl-框架) - [系统要求](#系统要求) - [安装](#installation) - [HITL应用示例](#example-hitl-applications) - [虚拟现实（VR）HITL应用](#vr-hitl-applications) - [配置](#configuration) - [最小化HITL应用](#最小化HITL应用) ## 系统要求 * **操作系统**：macOS或Linux。我们已测试过Fedora，但其他Linux发行版应该也能正常运行。 * **CPU/GPU**：Apple M1 Pro/Max、Intel Core i7 + 独立显卡或同等配置。 * **显示设备**：配备外接显示器的笔记本电脑或台式机。我们尚未测试远程桌面或其他无头选项。 * **存储空间**：约20 GB，包括Habitat依赖项和运行时数据（如HSSD）。这不包括常见的第三方库和操作系统库。一台Ubuntu机器需要大约60 GB的存储空间，用于操作系统以及运行HITL应用程序所需的其他所有内容。 * **虚拟现实（VR）：** HITL VR采用客户端/服务器模型，该模型既需要一台桌面系统（如上所述），也需要一个VR头戴设备。有关详细信息，请参阅[`pick_throw_vr/README.md`](../examples/hitl/pick_throw_vr/README.md)。 示例HITL（人机交互测试）应用程序配置为每秒运行30步（SPS）。如果您的系统不符合上述规格，则SPS会降低，用户体验也会下降。 ## 安装 1. 克隆Habitat-lab [主分支](https://github.com/facebookresearch/habitat-lab)。 2. 按照[安装说明](https://github.com/facebookresearch/habitat-lab#installation)安装Habitat-lab。 * HITL框架依赖于`habitat-lab`和`habitat-baselines`这两个包。虽然这些包与HITL框架位于同一仓库中，但HITL框架并不一定需要导入这些位于[人机交互（HITL）框架](#human-in-the-loop-hitl-framework)中的包 3. 安装Habitat-sim主分支（[https://github.com/facebookresearch/habitat-sim）](https://github.com/facebookresearch/habitat-sim%EF%BC%89)。 * [从源代码构建](https://github.com/facebookresearch/habitat-sim/blob/main/BUILD_FROM_SOURCE.md)，或安装[conda包](https://github.com/facebookresearch/habitat-sim#recommended-conda-packages)。 * 请务必包含Bullet物理引擎，例如`python setup.py install --bullet`。 4. 安装`habitat-hitl`包。 * 在`habitat-lab`根目录下，运行`pip install -e habitat-hitl`。 5. 为我们的示例HITL（人机交互训练）应用程序下载所需资源（请注意，数据集下载器应从habitat-lab/目录下运行）： ```bash python -m habitat_sim.utils.datasets_download \\ --uids hab3-episodes habitat_humanoids hab_spot_arm ycb hssd-hab \\ --data-path data/ ``` ## 数据目录和运行位置 HITL应用程序（以及一般的Habitat库）期望在运行位置（即当前工作目录）中有一个`data/`目录。请注意我们上述安装步骤中的`--data-path`参数。以下有两种选项可供考虑： 1. 按照上述安装步骤，将数据下载到`habitat-lab/data`目录。这是许多Habitat教程和实用程序的默认位置。从此位置运行您的HITL应用程序，例如`habitat-lab/$ python /path/to/my_hitl_app/my_hitl_app.py`。 2. 将数据下载（或使用符号链接）到您的HITL应用程序的根目录，例如`/path/to/my_hitl_app/data`。从此位置运行您的HITL应用程序，例如`/path/to/my_hitl_app/$ python my_hitl_app.py` ## 示例HITL应用 请查看我们的示例HITL应用[点击此处](../examples/hitl/)。 将这些作为参考来创建您自己的HITL（硬件在环）应用程序。我们建议您首先将一个示例应用程序文件夹（如`hitl/pick_throw_vr/`）复制粘贴到您自己的Git仓库中，例如`my_repo/my_pick_throw_vr/`。 ## VR HITL应用 HITL框架可用于构建桌面应用程序（通过键盘/鼠标控制）以及**虚拟现实（VR）**应用程序。请参阅我们的[Pick_throw_vr](../examples/hitl/pick_throw_vr/README.md)示例应用程序。 ## 配置 HITL（人机交互测试）应用程序使用Hydra进行配置，例如，控制桌面窗口的宽度和高度。请参阅[`hitl_defaults.yaml`](./config/hitl_defaults.yaml)以及每个示例应用程序的单独配置文件，例如[`pick_throw_vr.yaml`](../examples/hitl/pick_throw_vr/config/pick_throw_vr.yaml)。另请参阅[`habitat-lab/habitat/config/README.md`](../habitat-lab/habitat/config/README.md)。 ## 最小化HITL应用 通过实现派生的AppState、加载合适的Hydra配置并调用`hitl_main`，构建一个最小的桌面HITL应用。让我们来仔细看看： # minimal_cfg.yaml # 有关Hydra的更多信息，请参阅habitat-lab/habitat/config/README.md。 # @package _global_ 默认值： # 我们加载了以Spot机器人为特色的`pop_play` Habitat基线模型 # 以及HSSD场景中的人形实体。请参阅habitat-baselines/README.md。 - social_rearrange: pop_play # 为HITL框架加载默认参数。请参阅 # habitat-hitl/habitat_hitl/config/hitl_defaults.yaml。 - hitl_defaults - _self_ # minimal.py import hydra import magnum from habitat_hitl.app_states.app_state_abc import AppState from habitat_hitl.core.gui_input import GuiInput from habitat_hitl.core.hitl_main import hitl_main from habitat_hitl.core.hydra_utils import register_hydra_plugins class AppStateMinimal(AppState): \"\"\" A minimal HITL app that loads and steps a Habitat environment, with a fixed overhead camera. \"\"\" def __init__(self, app_service): self._app_service = app_service def sim_update(self, dt, post_sim_update_dict): \"\"\" The HITL framework calls sim_update continuously (for each \"frame\"), before rendering the app's GUI window. \"\"\" # run the episode until it ends if not self._app_service.env.episode_over: self._app_service.compute_action_and_step_env() # set the camera for the main 3D viewport post_sim_update_dict[\"cam_transform\"] = magnum.Matrix4.look_at( eye=magnum.Vector3(-20, 20, -20), target=magnum.Vector3(0, 0, 0), up=magnum.Vector3(0, 1, 0), ) # exit when the ESC key is pressed if self._app_service.gui_input.get_key_down(KeyCode.ESC): post_sim_update_dict[\"application_exit\"] = True @hydra.main(version_base=None, config_path=\"./\", config_name=\"minimal_cfg\") def main(config): hitl_main(config, lambda app_service: AppStateMinimal(app_service)) if __name__ == \"__main__\": register_hydra_plugins() main() See the latest version of the minimal app [here](../examples/hitl/minimal/). cd /home/zyg/habitat3_ws/habitat-lab conda activate habitat3 export DISPLAY=:0 export __NV_PRIME_RENDER_OFFLOAD=1 export __GLX_VENDOR_LIBRARY_NAME=nvidia export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json export LD_PRELOAD=/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0 SDL_VIDEODRIVER=x11 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=train python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=train --no-render --save-obs --save-obs-fname sc0_sc2.mp4 修改了源文件 # 新的修改 export DISPLAY=:0 export __NV_PRIME_RENDER_OFFLOAD=1 export __GLX_VENDOR_LIBRARY_NAME=nvidia export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json export LD_PRELOAD=/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0 export SDL_VIDEODRIVER=x11 #如果仍报 BadAccess，再执行一次（每次登录只需一次）： xhost +SI:localuser:$USER python examples/interactive_play.py --no-render --save-obs --save-obs-fname play.mp4 # 一直渲染111 cd /home/zyg/habitat3_ws/habitat-lab conda activate habitat3 export DISPLAY=:0 export __NV_PRIME_RENDER_OFFLOAD=1 export __GLX_VENDOR_LIBRARY_NAME=nvidia export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json export LD_PRELOAD=/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0 export SDL_VIDEODRIVER=x11 python examples/interactive_play.py --never-end # pygame heiping # nb!!!!!!!!!!!! # 这个是好的，可以现在pygame完全实现了！！！ export SDL_VIDEODRIVER=x11 export SDL_VIDEO_X11_FORCE_EGL=1 export SDL_RENDER_DRIVER=software python examples/interactive_play.py --never-end 使用I/J/K/L键可控制机器人底座向前/向左/向后/向右移动，使用W/A/S/D键可控制手臂末端执行器向前/向左/向后/向右移动，使用E/Q键可控制手臂上下移动。通过末端执行器控制手臂可能较难操作。更多详情请参阅文档。尝试移动底座和手臂，使其触碰桌上的红色碗。祝您愉快！ 注意：当前在Ubuntu 20.04上，交互式测试会失败，并报错：X错误：请求失败：BadAccess（尝试访问私有资源被拒绝）。我们正在努力修复此问题，一旦修复完成，将立即更新相关说明。该脚本在MacOS上运行正常，无报错。 环境对比 以下是 (habitat3) 与 (base) 环境中参数不同的地方对比：\n1. 核心变量修改 (值发生改变) 变量名 (habitat3) 的值 (base) 的值 说明 CONDA_DEFAULT_ENV habitat3 base 环境名称 CONDA_PREFIX .../envs/habitat3 .../anaconda3 环境路径 CONDA_SHLVL 2 1 嵌套层级 CONDA_PROMPT_MODIFIER (habitat3) (base) 终端提示符 PATH /home/zyg/anaconda3/envs/habitat3/bin:... (habitat优先) /home/zyg/anaconda3/bin:... (base优先) 可执行程序搜索顺序 LD_LIBRARY_PATH /lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu /opt/ros/humble/...:/opt/ros/humble/lib 关键差异：habitat3 指向系统库，base 指向 ROS 库 GSETTINGS_SCHEMA_DIR .../envs/habitat3/share/glib-2.0/schemas .../anaconda3/share/glib-2.0/schemas GNOME 配置路径 SYSTEMD_EXEC_PID 2243 11268 进程 PID (运行时的随机差异) GNOME_TERMINAL_SCREEN .../screen/61ab9170... .../screen/45b5736f... 终端窗口 ID (运行时的随机差异) 2. (habitat3) 独有的变量 (在 base 中不存在) 这些全部是为 Habitat 仿真器配置的图形驱动和渲染参数：\nCONDA_PREFIX_1=\"/home/zyg/anaconda3\" (记录上一级环境路径) 显卡驱动强制加载: LD_PRELOAD=\"/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0\" SDL (仿真器窗口) 配置: SDL_RENDER_DRIVER=\"software\" SDL_VIDEODRIVER=\"x11\" SDL_VIDEO_X11_FORCE_EGL=\"1\" NVIDIA / EGL 厂商配置: __EGL_VENDOR_LIBRARY_DIRS=\"/home/zyg/anaconda3/envs/habitat3/share/glvnd/egl_vendor.d\" __EGL_VENDOR_LIBRARY_FILENAMES=\"/usr/share/glvnd/egl_vendor.d/10_nvidia.json\" __GLX_VENDOR_LIBRARY_NAME=\"nvidia\" __NV_PRIME_RENDER_OFFLOAD=\"1\" 3. (base) 独有的变量 (无。base 环境中的变量在 habitat3 中基本都存在，只是值不同)\n","wordCount":"883","inLanguage":"zh-cn","datePublished":"2026-03-20T22:00:00+08:00","dateModified":"2026-03-20T22:00:00+08:00","author":{"@type":"Person","name":"Moonyboat"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://moonyboat.github.io/notes/habitat%E5%AD%A6%E4%B9%A0/habitat3%E6%8C%A3%E6%89%8E/"},"publisher":{"@type":"Organization","name":"Moonyboat 的博客","logo":{"@type":"ImageObject","url":"https://moonyboat.github.io/favicon-v2.ico"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=/ accesskey=h title="Moonyboat 的博客 (Alt + H)">Moonyboat 的博客</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=/ title=Home><span>Home</span></a></li><li><a href=/notes/ title=Notes><span>Notes</span></a></li><li><a href=/daily/ title=Daily><span>Daily</span></a></li><li><a href=/projects/ title=Projects><span>Projects</span></a></li><li><a href=/about/ title=About><span>About</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Habitat3 挣扎</h1><div class=post-meta><span title='2026-03-20 22:00:00 +0800 +0800'>March 20, 2026</span>&nbsp;·&nbsp;<span>Moonyboat</span></div><ul class="post-tags post-tags-header"><li><a href=/tags/habitat/>Habitat</a></li><li><a href=/tags/conda/>Conda</a></li></ul></header><div class=post-content><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>source /home/zyg/anaconda3/etc/profile.d/conda.sh
+</span></span><span style=display:flex><span>conda activate habitat3
+</span></span><span style=display:flex><span>export LD_LIBRARY_PATH<span style=color:#f92672>=</span>/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu
+</span></span><span style=display:flex><span>export LD_PRELOAD<span style=color:#f92672>=</span>/lib/x86_64-linux-gnu/libEGL_nvidia.so.0:/lib/x86_64-linux-gnu/libGLX_nvidia.so.0
+</span></span><span style=display:flex><span>export __EGL_VENDOR_LIBRARY_FILENAMES<span style=color:#f92672>=</span>/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+</span></span><span style=display:flex><span>export __GLX_VENDOR_LIBRARY_NAME<span style=color:#f92672>=</span>nvidia
+</span></span><span style=display:flex><span>export __NV_PRIME_RENDER_OFFLOAD<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>python /home/zyg/habitat3_ws/habitat-lab/verify_display.py
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> sys
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span><span style=color:#75715e># 替换下面的路径为你实际的 egg 文件路径</span>
+</span></span><span style=display:flex><span>sys<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>append(<span style=color:#e6db74>&#34;/home/zyg/anaconda3/envs/habitat3/lib/python3.9/site-packages/habitat_sim-0.3.3-py3.9-linux-x86_64.egg&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> habitat_sim
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. 场景路径</span>
+</span></span><span style=display:flex><span>test_scene <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;data/scene_datasets/habitat-test-scenes/apartment_1.glb&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>exists(test_scene):
+</span></span><span style=display:flex><span>	print(<span style=color:#e6db74>&#34;❌ 场景文件不存在，请检查路径&#34;</span>)
+</span></span><span style=display:flex><span>	exit()
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 配置仿真器</span>
+</span></span><span style=display:flex><span>sim_cfg <span style=color:#f92672>=</span> habitat_sim<span style=color:#f92672>.</span>SimulatorConfiguration()
+</span></span><span style=display:flex><span>sim_cfg<span style=color:#f92672>.</span>scene_id <span style=color:#f92672>=</span> test_scene
+</span></span><span style=display:flex><span>sim_cfg<span style=color:#f92672>.</span>enable_physics <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 尝试指定 GPU 0 (NVIDIA)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#sim_cfg.gpu_device_id = 0</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 配置传感器</span>
+</span></span><span style=display:flex><span>agent_cfg <span style=color:#f92672>=</span> habitat_sim<span style=color:#f92672>.</span>agent<span style=color:#f92672>.</span>AgentConfiguration()
+</span></span><span style=display:flex><span>rgb_sensor <span style=color:#f92672>=</span> habitat_sim<span style=color:#f92672>.</span>CameraSensorSpec()
+</span></span><span style=display:flex><span>rgb_sensor<span style=color:#f92672>.</span>uuid <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;color_sensor&#34;</span>
+</span></span><span style=display:flex><span>rgb_sensor<span style=color:#f92672>.</span>sensor_type <span style=color:#f92672>=</span> habitat_sim<span style=color:#f92672>.</span>SensorType<span style=color:#f92672>.</span>COLOR
+</span></span><span style=display:flex><span>rgb_sensor<span style=color:#f92672>.</span>sensor_subtype <span style=color:#f92672>=</span> habitat_sim<span style=color:#f92672>.</span>SensorSubType<span style=color:#f92672>.</span>PINHOLE
+</span></span><span style=display:flex><span>rgb_sensor<span style=color:#f92672>.</span>resolution <span style=color:#f92672>=</span> [<span style=color:#ae81ff>512</span>, <span style=color:#ae81ff>512</span>]
+</span></span><span style=display:flex><span>rgb_sensor<span style=color:#f92672>.</span>position <span style=color:#f92672>=</span> [<span style=color:#ae81ff>0.0</span>, <span style=color:#ae81ff>1.5</span>, <span style=color:#ae81ff>0.0</span>]
+</span></span><span style=display:flex><span>agent_cfg<span style=color:#f92672>.</span>sensor_specifications <span style=color:#f92672>=</span> [rgb_sensor]
+</span></span><span style=display:flex><span>cfg <span style=color:#f92672>=</span> habitat_sim<span style=color:#f92672>.</span>Configuration(sim_cfg, [agent_cfg])
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;🚀 正在尝试初始化仿真器 (Python版)...&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span><span style=color:#75715e># 这里是关键：看 Python 能否成功创建上下文</span>
+</span></span><span style=display:flex><span>sim <span style=color:#f92672>=</span> habitat_sim<span style=color:#f92672>.</span>Simulator(cfg)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;✅ 仿真器初始化成功！&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#75715e># 尝试渲染一帧</span>
+</span></span><span style=display:flex><span>agent <span style=color:#f92672>=</span> sim<span style=color:#f92672>.</span>initialize_agent(<span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>obs <span style=color:#f92672>=</span> sim<span style=color:#f92672>.</span>step(<span style=color:#e6db74>&#34;move_forward&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#e6db74>&#34;color_sensor&#34;</span> <span style=color:#f92672>in</span> obs:
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;✅ 成功获取图像数据！尺寸: </span><span style=color:#e6db74>{</span>obs[<span style=color:#e6db74>&#39;color_sensor&#39;</span>]<span style=color:#f92672>.</span>shape<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;🎉 结论：你的环境可以正常运行 Python 代码！不用管 habitat-viewer 的报错了。&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;⚠️ 初始化成功但未获取到图像。&#34;</span>)
+</span></span><span style=display:flex><span>sim<span style=color:#f92672>.</span>close()
+</span></span><span style=display:flex><span><span style=color:#66d9ef>except</span> <span style=color:#a6e22e>Exception</span> <span style=color:#66d9ef>as</span> e:
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;❌ Python 初始化也失败了: </span><span style=color:#e6db74>{</span>e<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>source /home/zyg/anaconda3/etc/profile.d/conda.sh
+</span></span><span style=display:flex><span>conda activate habitat3
+</span></span><span style=display:flex><span>cd /home/zyg/habitat3_ws/habitat-lab
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>python -m habitat_sim.utils.datasets_download --uids replica_cad_dataset --data-path data/
+</span></span><span style=display:flex><span>python -m habitat_sim.utils.datasets_download --uids hab_fetch --data-path data/
+</span></span><span style=display:flex><span>python -m habitat_sim.utils.datasets_download --uids ycb --data-path data/
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>export LD_LIBRARY_PATH<span style=color:#f92672>=</span>/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu
+</span></span><span style=display:flex><span>export LD_PRELOAD<span style=color:#f92672>=</span>/lib/x86_64-linux-gnu/libEGL_nvidia.so.0:/lib/x86_64-linux-gnu/libGLX_nvidia.so.0
+</span></span><span style=display:flex><span>export __EGL_VENDOR_LIBRARY_FILENAMES<span style=color:#f92672>=</span>/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+</span></span><span style=display:flex><span>export __GLX_VENDOR_LIBRARY_NAME<span style=color:#f92672>=</span>nvidia
+</span></span><span style=display:flex><span>export __NV_PRIME_RENDER_OFFLOAD<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>SDL_VIDEODRIVER<span style=color:#f92672>=</span>x11 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>python examples/interactive_play.py --no-render --save-obs --save-obs-fname play.mp4
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#确认数据集完整性</span>
+</span></span><span style=display:flex><span>ls -l data/replica_cad/scene_dataset_config.json
+</span></span><span style=display:flex><span>ls -l data/replica_cad/navmeshes/v3_sc4_staging_00.navmesh
+</span></span><span style=display:flex><span>ls -l data/robots/hab_fetch/fetch_no_base.urdf
+</span></span><span style=display:flex><span>ls -l data/objects/ycb/ycb.scene_dataset_config.json
+</span></span><span style=display:flex><span>ls -l data/datasets/replica_cad/rearrange
+</span></span></code></pre></div><p>trouble</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-txt data-lang=txt><span style=display:flex><span># 故障排除
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这是一份常见问题列表以及相应的故障排除提示。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>如果在Github上提交问题，请包含以下内容：
+</span></span><span style=display:flex><span>* 关于您环境的信息（操作系统、显卡等）。
+</span></span><span style=display:flex><span>* 你已经尝试过的故障排除步骤。
+</span></span><span style=display:flex><span>* 截图（如适用）。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>- [常见问题](#常见问题)
+</span></span><span style=display:flex><span>  - [Habitat-Lab interactive_play.py](#habitat-lab-interactive_playpy)
+</span></span><span style=display:flex><span>  - [无法创建上下文](#无法创建上下文)
+</span></span><span style=display:flex><span>  - [NVIDIA A100上的黑色方块](#black-squares-on-nvidia-a100)
+</span></span><span style=display:flex><span>- [图形故障排除技巧](#图形故障排除技巧)
+</span></span><span style=display:flex><span>    - [通用提示](#通用提示)
+</span></span><span style=display:flex><span>    - [Linux](#linux)
+</span></span><span style=display:flex><span>    - [Windows](#windows)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>## 常见问题
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>### Habitat-Lab interactive_play.py
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>在某些系统上，`examples/interactive_play.py`会因以下错误而崩溃：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>X 失败请求的错误：BadAccess（尝试访问私有资源被拒绝）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这是一个与底层`pygame`库如何与Habitat交互相关的持续问题。`interactive_play`脚本的替代方案已在[路线图](habitat-hitl/README.md)中列出。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>### 无法创建上下文
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>在某些系统上，无法找到有效的GPU：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Platform::WindowlessEglApplication::tryCreateContext()：在总共2个EGL设备中，无法找到CUDA设备0
+</span></span><span style=display:flex><span>无窗口上下文：无法创建无窗口上下文
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这通常是由以下原因引起的：
+</span></span><span style=display:flex><span>* 图形驱动程序已过时、缺失或无效。
+</span></span><span style=display:flex><span>* 在 Linux 上，这可能是由于缺少或不完整的 `libglvnd` 安装。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>请按照[以下](#graphics-troubleshooting-tips)的图形故障排除步骤进行操作。如果问题仍然存在，请随时在Github上提交问题。
+</span></span><span style=display:flex><span>### NVIDIA A100上的黑色方块
+</span></span><span style=display:flex><span>NVIDIA A100 GPU可能会导致Habitat传感器在某些环境中渲染出黑色矩形瑕疵。
+</span></span><span style=display:flex><span>如果您的设置出现此问题，请将CUDA驱动程序更新到最新版本（至少12.2）。
+</span></span><span style=display:flex><span>参见：https://github.com/facebookresearch/habitat-sim/issues/2310
+</span></span><span style=display:flex><span>## 图形故障排除技巧
+</span></span><span style=display:flex><span>这些步骤旨在缩小与图形相关问题的范围。
+</span></span><span style=display:flex><span>#### 一般提示
+</span></span><span style=display:flex><span>1. 提高日志记录的详细程度。
+</span></span><span style=display:flex><span>    使用以下环境变量启动应用程序：
+</span></span><span style=display:flex><span>    * `HABITAT_SIM_LOG=Debug`
+</span></span><span style=display:flex><span>      * 可选值，从最详细到最简略依次为：`VeryVerbose`、`Verbose`/`Debug`、`Warning`（默认值）、`Error`。
+</span></span><span style=display:flex><span>    * `MAGNUM_LOG=verbose`
+</span></span><span style=display:flex><span>      * 可选值，从最详细到最简洁依次为：`verbose`、`default`、`quiet`。
+</span></span><span style=display:flex><span>    * `MAGNUM_GPU_VALIDATION=ON`
+</span></span><span style=display:flex><span>2. 获取测试资源。
+</span></span><span style=display:flex><span>    * 在`habitat-lab`或`habitat-sim`存储库的根目录下，运行以下命令：`python -m habitat_sim.utils.datasets_download --uids habitat_test_scenes --data-path data/`
+</span></span><span style=display:flex><span>3. 通过运行基础查看器来验证问题是否出现在最小配置上。
+</span></span><span style=display:flex><span>    * 使用`habitat-sim` Conda包：
+</span></span><span style=display:flex><span>      * `MAGNUM_LOG=verbose MAGNUM_GPU_VALIDATION=ON habitat-viewer data/scene_datasets/habitat-test-scenes/skokloster-castle.glb`
+</span></span><span style=display:flex><span>    * 使用从源代码构建的`habitat-sim`：
+</span></span><span style=display:flex><span>      * `MAGNUM_LOG=verbose MAGNUM_GPU_VALIDATION=ON {habitat-sim}/build/viewer data/scene_datasets/habitat-test-scenes/skokloster-castle.glb`
+</span></span><span style=display:flex><span>4. 从头开始创建一个新的conda环境。一段时间后，该环境可能会偏离基线，从而导致冲突的出现。
+</span></span><span style=display:flex><span>#### Linux
+</span></span><span style=display:flex><span>1. *(NVIDIA)* 运行 `nvidia-smi` 命令。输出结果的首部应显示预期的驱动程序和 CUDA 版本。例如：
+</span></span><span style=display:flex><span>    ```NVIDIA-SMI 535.129.03 驱动程序版本：535.129.03 CUDA版本：12.2```
+</span></span><span style=display:flex><span>    如果命令返回错误或出现意外版本，请重新安装NVIDIA驱动程序。
+</span></span><span style=display:flex><span>2. 命令“eglinfo”应能正常运行，无错误。
+</span></span><span style=display:flex><span>    * *(NVIDIA, AMD)* 该命令应指示您的硬件GPU可用。
+</span></span><span style=display:flex><span>3. *(NVIDIA)* 请确保已安装并正确配置了`libglvnd`。此项配置经常被错误安装。
+</span></span><span style=display:flex><span>    1. 检查是否已安装`libglvnd`。
+</span></span><span style=display:flex><span>        * 基于Debian的系统：`apt list --installed | grep libglvnd`
+</span></span><span style=display:flex><span>        * 基于RPM：`dnf list installed | grep libglvnd`
+</span></span><span style=display:flex><span>    2. 确保存在针对NVIDIA的有效条目。
+</span></span><span style=display:flex><span>        在 `/usr/share/glvnd/egl_vendor.d/` 目录下（具体路径可能有所不同），请确保存在一个名为 `10_nvidia.json` 的条目。如果不存在，您可以尝试手动创建它。
+</span></span><span style=display:flex><span>        * 此文件应包含以下内容：
+</span></span><span style=display:flex><span>            ```
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                &#34;file_format_version&#34; : &#34;1.0.0&#34;,，
+</span></span><span style=display:flex><span>                &#34;ICD&#34; : {
+</span></span><span style=display:flex><span>                    “library_path” : “libEGL_nvidia.so.0”
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            ```
+</span></span><span style=display:flex><span>        * `library_path`字段应指向正确的NVIDIA EGL库。该库可通过命令`ldconfig -p | grep libEGL`找到。库`libEGL_nvidia`随NVIDIA驱动程序打包 - 如果缺失，请重新安装驱动程序。如果存在多个实例，则可能是驱动程序安装错误。
+</span></span><span style=display:flex><span>4. *(CPU渲染)* 如果你没有GPU，请确保你的CPU显卡驱动正常工作。
+</span></span><span style=display:flex><span>5. 如果在Wayland上运行，请尝试使用X11，反之亦然。虽然Habitat在两种显示协议下都应能正常工作，但这或许能揭示问题所在。
+</span></span></code></pre></div><p>运行sc0-3</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>cd /home/zyg/habitat3_ws/habitat-lab
+</span></span><span style=display:flex><span>conda activate habitat3
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 如果你之前需要这个才能跑通渲染</span>
+</span></span><span style=display:flex><span>export __NV_PRIME_RENDER_OFFLOAD<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># sc0–sc2</span>
+</span></span><span style=display:flex><span>python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split<span style=color:#f92672>=</span>train
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># sc3</span>
+</span></span><span style=display:flex><span>python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split<span style=color:#f92672>=</span>val
+</span></span></code></pre></div><h3 id=habitat-hitl解决方案>habitat-hitl解决方案<a hidden class=anchor aria-hidden=true href=#habitat-hitl解决方案>#</a></h3><p>readme</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-txt data-lang=txt><span style=display:flex><span># 人机交互（HITL）框架
+</span></span><span style=display:flex><span>HITL框架将真实的人类用户带入Habitat虚拟环境。利用该框架构建交互式桌面和虚拟现实（VR）应用程序，使用户能够与模拟机器人和其他虚拟代理进行交互。将这些应用程序部署给用户，以收集交互数据，用于代理评估和训练。
+</span></span><span style=display:flex><span>HITL框架由`habitat-hitl` Python库、示例[桌面应用程序](../examples/hitl/)，以及我们基于Unity的[VR客户端](../examples/hitl/pick_throw_vr/README.md#vr)组成。
+</span></span><span style=display:flex><span>该框架基于`habitat-lab`和`habitat-baselines`构建。它提供了封装器，用于实时加载、模拟和渲染Habitat环境，包括虚拟代理和策略推理。为了使用户能够与这些代理进行交互，该框架提供了图形用户界面（GUI），包括一个带有3D视口的窗口、相机控制和化身控制助手，以及虚拟现实（VR）集成。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  &lt;img src=&#34;../res/img/hitl_tool.gif&#34; height=400&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>- [人机交互（HITL）框架](#人机交互-hitl-框架)
+</span></span><span style=display:flex><span>  - [系统要求](#系统要求)
+</span></span><span style=display:flex><span>  - [安装](#installation)
+</span></span><span style=display:flex><span>  - [HITL应用示例](#example-hitl-applications)
+</span></span><span style=display:flex><span>  - [虚拟现实（VR）HITL应用](#vr-hitl-applications)
+</span></span><span style=display:flex><span>  - [配置](#configuration)
+</span></span><span style=display:flex><span>  - [最小化HITL应用](#最小化HITL应用)
+</span></span><span style=display:flex><span>## 系统要求
+</span></span><span style=display:flex><span>* **操作系统**：macOS或Linux。我们已测试过Fedora，但其他Linux发行版应该也能正常运行。
+</span></span><span style=display:flex><span>* **CPU/GPU**：Apple M1 Pro/Max、Intel Core i7 + 独立显卡或同等配置。
+</span></span><span style=display:flex><span>* **显示设备**：配备外接显示器的笔记本电脑或台式机。我们尚未测试远程桌面或其他无头选项。
+</span></span><span style=display:flex><span>* **存储空间**：约20 GB，包括Habitat依赖项和运行时数据（如HSSD）。这不包括常见的第三方库和操作系统库。一台Ubuntu机器需要大约60 GB的存储空间，用于操作系统以及运行HITL应用程序所需的其他所有内容。
+</span></span><span style=display:flex><span>* **虚拟现实（VR）：** HITL VR采用客户端/服务器模型，该模型既需要一台桌面系统（如上所述），也需要一个VR头戴设备。有关详细信息，请参阅[`pick_throw_vr/README.md`](../examples/hitl/pick_throw_vr/README.md)。
+</span></span><span style=display:flex><span>示例HITL（人机交互测试）应用程序配置为每秒运行30步（SPS）。如果您的系统不符合上述规格，则SPS会降低，用户体验也会下降。
+</span></span><span style=display:flex><span>## 安装
+</span></span><span style=display:flex><span>1. 克隆Habitat-lab [主分支](https://github.com/facebookresearch/habitat-lab)。
+</span></span><span style=display:flex><span>2. 按照[安装说明](https://github.com/facebookresearch/habitat-lab#installation)安装Habitat-lab。
+</span></span><span style=display:flex><span>    * HITL框架依赖于`habitat-lab`和`habitat-baselines`这两个包。虽然这些包与HITL框架位于同一仓库中，但HITL框架并不一定需要导入这些位于[人机交互（HITL）框架](#human-in-the-loop-hitl-framework)中的包
+</span></span><span style=display:flex><span>3. 安装Habitat-sim主分支（[https://github.com/facebookresearch/habitat-sim）](https://github.com/facebookresearch/habitat-sim%EF%BC%89)。
+</span></span><span style=display:flex><span>    * [从源代码构建](https://github.com/facebookresearch/habitat-sim/blob/main/BUILD_FROM_SOURCE.md)，或安装[conda包](https://github.com/facebookresearch/habitat-sim#recommended-conda-packages)。
+</span></span><span style=display:flex><span>        * 请务必包含Bullet物理引擎，例如`python setup.py install --bullet`。
+</span></span><span style=display:flex><span>4. 安装`habitat-hitl`包。
+</span></span><span style=display:flex><span>    * 在`habitat-lab`根目录下，运行`pip install -e habitat-hitl`。
+</span></span><span style=display:flex><span>5. 为我们的示例HITL（人机交互训练）应用程序下载所需资源（请注意，数据集下载器应从habitat-lab/目录下运行）：
+</span></span><span style=display:flex><span>    ```bash
+</span></span><span style=display:flex><span>    python -m habitat_sim.utils.datasets_download \
+</span></span><span style=display:flex><span>    --uids hab3-episodes habitat_humanoids hab_spot_arm ycb hssd-hab \
+</span></span><span style=display:flex><span>    --data-path data/
+</span></span><span style=display:flex><span>    ```
+</span></span><span style=display:flex><span>## 数据目录和运行位置
+</span></span><span style=display:flex><span>HITL应用程序（以及一般的Habitat库）期望在运行位置（即当前工作目录）中有一个`data/`目录。请注意我们上述安装步骤中的`--data-path`参数。以下有两种选项可供考虑：
+</span></span><span style=display:flex><span>1. 按照上述安装步骤，将数据下载到`habitat-lab/data`目录。这是许多Habitat教程和实用程序的默认位置。从此位置运行您的HITL应用程序，例如`habitat-lab/$ python /path/to/my_hitl_app/my_hitl_app.py`。
+</span></span><span style=display:flex><span>2. 将数据下载（或使用符号链接）到您的HITL应用程序的根目录，例如`/path/to/my_hitl_app/data`。从此位置运行您的HITL应用程序，例如`/path/to/my_hitl_app/$ python my_hitl_app.py`
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>## 示例HITL应用
+</span></span><span style=display:flex><span>请查看我们的示例HITL应用[点击此处](../examples/hitl/)。
+</span></span><span style=display:flex><span>将这些作为参考来创建您自己的HITL（硬件在环）应用程序。我们建议您首先将一个示例应用程序文件夹（如`hitl/pick_throw_vr/`）复制粘贴到您自己的Git仓库中，例如`my_repo/my_pick_throw_vr/`。
+</span></span><span style=display:flex><span>## VR HITL应用
+</span></span><span style=display:flex><span>HITL框架可用于构建桌面应用程序（通过键盘/鼠标控制）以及**虚拟现实（VR）**应用程序。请参阅我们的[Pick_throw_vr](../examples/hitl/pick_throw_vr/README.md)示例应用程序。
+</span></span><span style=display:flex><span>## 配置
+</span></span><span style=display:flex><span>HITL（人机交互测试）应用程序使用Hydra进行配置，例如，控制桌面窗口的宽度和高度。请参阅[`hitl_defaults.yaml`](./config/hitl_defaults.yaml)以及每个示例应用程序的单独配置文件，例如[`pick_throw_vr.yaml`](../examples/hitl/pick_throw_vr/config/pick_throw_vr.yaml)。另请参阅[`habitat-lab/habitat/config/README.md`](../habitat-lab/habitat/config/README.md)。
+</span></span><span style=display:flex><span>## 最小化HITL应用
+</span></span><span style=display:flex><span>通过实现派生的AppState、加载合适的Hydra配置并调用`hitl_main`，构建一个最小的桌面HITL应用。让我们来仔细看看：
+</span></span><span style=display:flex><span># minimal_cfg.yaml
+</span></span><span style=display:flex><span># 有关Hydra的更多信息，请参阅habitat-lab/habitat/config/README.md。
+</span></span><span style=display:flex><span># @package _global_
+</span></span><span style=display:flex><span>默认值：
+</span></span><span style=display:flex><span>  # 我们加载了以Spot机器人为特色的`pop_play` Habitat基线模型
+</span></span><span style=display:flex><span>  # 以及HSSD场景中的人形实体。请参阅habitat-baselines/README.md。
+</span></span><span style=display:flex><span>  - social_rearrange: pop_play
+</span></span><span style=display:flex><span>  # 为HITL框架加载默认参数。请参阅
+</span></span><span style=display:flex><span>  # habitat-hitl/habitat_hitl/config/hitl_defaults.yaml。
+</span></span><span style=display:flex><span>  - hitl_defaults
+</span></span><span style=display:flex><span>  - _self_
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># minimal.py
+</span></span><span style=display:flex><span>import hydra
+</span></span><span style=display:flex><span>import magnum
+</span></span><span style=display:flex><span>from habitat_hitl.app_states.app_state_abc import AppState
+</span></span><span style=display:flex><span>from habitat_hitl.core.gui_input import GuiInput
+</span></span><span style=display:flex><span>from habitat_hitl.core.hitl_main import hitl_main
+</span></span><span style=display:flex><span>from habitat_hitl.core.hydra_utils import register_hydra_plugins
+</span></span><span style=display:flex><span>class AppStateMinimal(AppState):
+</span></span><span style=display:flex><span>&#34;&#34;&#34;
+</span></span><span style=display:flex><span>A minimal HITL app that loads and steps a Habitat environment, with
+</span></span><span style=display:flex><span>a fixed overhead camera.
+</span></span><span style=display:flex><span>&#34;&#34;&#34;
+</span></span><span style=display:flex><span>def __init__(self, app_service):
+</span></span><span style=display:flex><span>self._app_service = app_service
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>def sim_update(self, dt, post_sim_update_dict):
+</span></span><span style=display:flex><span>&#34;&#34;&#34;
+</span></span><span style=display:flex><span>The HITL framework calls sim_update continuously (for each
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&#34;frame&#34;), before rendering the app&#39;s GUI window.
+</span></span><span style=display:flex><span>&#34;&#34;&#34;
+</span></span><span style=display:flex><span># run the episode until it ends
+</span></span><span style=display:flex><span>if not self._app_service.env.episode_over:
+</span></span><span style=display:flex><span>self._app_service.compute_action_and_step_env()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># set the camera for the main 3D viewport
+</span></span><span style=display:flex><span>post_sim_update_dict[&#34;cam_transform&#34;] = magnum.Matrix4.look_at(
+</span></span><span style=display:flex><span>eye=magnum.Vector3(-20, 20, -20),
+</span></span><span style=display:flex><span>target=magnum.Vector3(0, 0, 0),
+</span></span><span style=display:flex><span>up=magnum.Vector3(0, 1, 0),
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># exit when the ESC key is pressed
+</span></span><span style=display:flex><span>if self._app_service.gui_input.get_key_down(KeyCode.ESC):
+</span></span><span style=display:flex><span>post_sim_update_dict[&#34;application_exit&#34;] = True
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>@hydra.main(version_base=None, config_path=&#34;./&#34;, config_name=&#34;minimal_cfg&#34;)
+</span></span><span style=display:flex><span>def main(config):
+</span></span><span style=display:flex><span>hitl_main(config, lambda app_service: AppStateMinimal(app_service))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>if __name__ == &#34;__main__&#34;:
+</span></span><span style=display:flex><span>register_hydra_plugins()
+</span></span><span style=display:flex><span>main()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>See the latest version of the minimal app [here](../examples/hitl/minimal/).
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>cd /home/zyg/habitat3_ws/habitat-lab
+</span></span><span style=display:flex><span>conda activate habitat3
+</span></span><span style=display:flex><span>export DISPLAY<span style=color:#f92672>=</span>:0
+</span></span><span style=display:flex><span>export __NV_PRIME_RENDER_OFFLOAD<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>export __GLX_VENDOR_LIBRARY_NAME<span style=color:#f92672>=</span>nvidia
+</span></span><span style=display:flex><span>export __EGL_VENDOR_LIBRARY_FILENAMES<span style=color:#f92672>=</span>/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+</span></span><span style=display:flex><span>export LD_PRELOAD<span style=color:#f92672>=</span>/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0
+</span></span><span style=display:flex><span>SDL_VIDEODRIVER<span style=color:#f92672>=</span>x11 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split<span style=color:#f92672>=</span>train
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split<span style=color:#f92672>=</span>train --no-render --save-obs --save-obs-fname sc0_sc2.mp4
+</span></span></code></pre></div><p>修改了源文件
+<img loading=lazy src="/notes/Habitat学习/images/Pasted image 20260115170613.png">
+<img loading=lazy src="/notes/Habitat学习/images/Pasted image 20260115171619.png"></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 新的修改</span>
+</span></span><span style=display:flex><span>export DISPLAY<span style=color:#f92672>=</span>:0
+</span></span><span style=display:flex><span>export __NV_PRIME_RENDER_OFFLOAD<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>export __GLX_VENDOR_LIBRARY_NAME<span style=color:#f92672>=</span>nvidia
+</span></span><span style=display:flex><span>export __EGL_VENDOR_LIBRARY_FILENAMES<span style=color:#f92672>=</span>/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+</span></span><span style=display:flex><span>export LD_PRELOAD<span style=color:#f92672>=</span>/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0
+</span></span><span style=display:flex><span>export SDL_VIDEODRIVER<span style=color:#f92672>=</span>x11
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#如果仍报 BadAccess，再执行一次（每次登录只需一次）：</span>
+</span></span><span style=display:flex><span>xhost +SI:localuser:$USER
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>python examples/interactive_play.py --no-render --save-obs --save-obs-fname play.mp4
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 一直渲染111</span>
+</span></span><span style=display:flex><span>cd /home/zyg/habitat3_ws/habitat-lab
+</span></span><span style=display:flex><span>conda activate habitat3
+</span></span><span style=display:flex><span>export DISPLAY<span style=color:#f92672>=</span>:0
+</span></span><span style=display:flex><span>export __NV_PRIME_RENDER_OFFLOAD<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>export __GLX_VENDOR_LIBRARY_NAME<span style=color:#f92672>=</span>nvidia
+</span></span><span style=display:flex><span>export __EGL_VENDOR_LIBRARY_FILENAMES<span style=color:#f92672>=</span>/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+</span></span><span style=display:flex><span>export LD_PRELOAD<span style=color:#f92672>=</span>/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0
+</span></span><span style=display:flex><span>export SDL_VIDEODRIVER<span style=color:#f92672>=</span>x11
+</span></span><span style=display:flex><span>python examples/interactive_play.py --never-end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pygame heiping </span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nb!!!!!!!!!!!!</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 这个是好的，可以现在pygame完全实现了！！！</span>
+</span></span><span style=display:flex><span>export SDL_VIDEODRIVER<span style=color:#f92672>=</span>x11
+</span></span><span style=display:flex><span>export SDL_VIDEO_X11_FORCE_EGL<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>export SDL_RENDER_DRIVER<span style=color:#f92672>=</span>software
+</span></span><span style=display:flex><span>python examples/interactive_play.py --never-end
+</span></span></code></pre></div><p><img loading=lazy src="/notes/Habitat学习/images/Pasted image 20260115174428.png">
+<img loading=lazy src="/notes/Habitat学习/images/Pasted image 20260115174620.png"></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-txt data-lang=txt><span style=display:flex><span>使用I/J/K/L键可控制机器人底座向前/向左/向后/向右移动，使用W/A/S/D键可控制手臂末端执行器向前/向左/向后/向右移动，使用E/Q键可控制手臂上下移动。通过末端执行器控制手臂可能较难操作。更多详情请参阅文档。尝试移动底座和手臂，使其触碰桌上的红色碗。祝您愉快！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>注意：当前在Ubuntu 20.04上，交互式测试会失败，并报错：X错误：请求失败：BadAccess（尝试访问私有资源被拒绝）。我们正在努力修复此问题，一旦修复完成，将立即更新相关说明。该脚本在MacOS上运行正常，无报错。
+</span></span></code></pre></div><h2 id=环境对比>环境对比<a hidden class=anchor aria-hidden=true href=#环境对比>#</a></h2><p>以下是 <strong>(habitat3)</strong> 与 <strong>(base)</strong> 环境中参数不同的地方对比：</p><h3 id=1-核心变量修改-值发生改变>1. 核心变量修改 (值发生改变)<a hidden class=anchor aria-hidden=true href=#1-核心变量修改-值发生改变>#</a></h3><table><thead><tr><th>变量名</th><th>(habitat3) 的值</th><th>(base) 的值</th><th>说明</th></tr></thead><tbody><tr><td><strong>CONDA_DEFAULT_ENV</strong></td><td><code>habitat3</code></td><td><code>base</code></td><td>环境名称</td></tr><tr><td><strong>CONDA_PREFIX</strong></td><td><code>.../envs/habitat3</code></td><td><code>.../anaconda3</code></td><td>环境路径</td></tr><tr><td><strong>CONDA_SHLVL</strong></td><td><code>2</code></td><td><code>1</code></td><td>嵌套层级</td></tr><tr><td><strong>CONDA_PROMPT_MODIFIER</strong></td><td><code>(habitat3)</code></td><td><code>(base)</code></td><td>终端提示符</td></tr><tr><td><strong>PATH</strong></td><td><code>/home/zyg/anaconda3/envs/habitat3/bin:...</code> (habitat优先)</td><td><code>/home/zyg/anaconda3/bin:...</code> (base优先)</td><td>可执行程序搜索顺序</td></tr><tr><td><strong>LD_LIBRARY_PATH</strong></td><td><code>/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu</code></td><td><code>/opt/ros/humble/...:/opt/ros/humble/lib</code></td><td><strong>关键差异</strong>：habitat3 指向系统库，base 指向 ROS 库</td></tr><tr><td><strong>GSETTINGS_SCHEMA_DIR</strong></td><td><code>.../envs/habitat3/share/glib-2.0/schemas</code></td><td><code>.../anaconda3/share/glib-2.0/schemas</code></td><td>GNOME 配置路径</td></tr><tr><td><strong>SYSTEMD_EXEC_PID</strong></td><td><code>2243</code></td><td><code>11268</code></td><td>进程 PID (运行时的随机差异)</td></tr><tr><td><strong>GNOME_TERMINAL_SCREEN</strong></td><td><code>.../screen/61ab9170...</code></td><td><code>.../screen/45b5736f...</code></td><td>终端窗口 ID (运行时的随机差异)</td></tr></tbody></table><hr><h3 id=2-habitat3-独有的变量-在-base-中不存在>2. (habitat3) 独有的变量 (在 base 中不存在)<a hidden class=anchor aria-hidden=true href=#2-habitat3-独有的变量-在-base-中不存在>#</a></h3><p><strong>这些全部是为 Habitat 仿真器配置的图形驱动和渲染参数：</strong></p><ul><li><code>CONDA_PREFIX_1="/home/zyg/anaconda3"</code> (记录上一级环境路径)</li><li><strong>显卡驱动强制加载:</strong><ul><li><code>LD_PRELOAD="/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0"</code></li></ul></li><li><strong>SDL (仿真器窗口) 配置:</strong><ul><li><code>SDL_RENDER_DRIVER="software"</code></li><li><code>SDL_VIDEODRIVER="x11"</code></li><li><code>SDL_VIDEO_X11_FORCE_EGL="1"</code></li></ul></li><li><strong>NVIDIA / EGL 厂商配置:</strong><ul><li><code>__EGL_VENDOR_LIBRARY_DIRS="/home/zyg/anaconda3/envs/habitat3/share/glvnd/egl_vendor.d"</code></li><li><code>__EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/10_nvidia.json"</code></li><li><code>__GLX_VENDOR_LIBRARY_NAME="nvidia"</code></li><li><code>__NV_PRIME_RENDER_OFFLOAD="1"</code></li></ul></li></ul><hr><h3 id=3-base-独有的变量>3. (base) 独有的变量<a hidden class=anchor aria-hidden=true href=#3-base-独有的变量>#</a></h3><p><em>(无。base 环境中的变量在 habitat3 中基本都存在，只是值不同)</em></p></div><footer class=post-footer></footer></article></main><footer class=footer><span>&copy; 2026 <a href=/>Moonyboat 的博客</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script></body></html>
