@@ -1,0 +1,15 @@
+{{- if eq .Type "block" -}}
+  {{- with transform.ToMath .Inner (dict "displayMode" true "output" "htmlAndMathml") -}}
+    {{- $.Page.Store.Set "hasMath" true -}}
+    {{- . -}}
+  {{- else -}}
+    {{- errorf "Unable to render mathematical markup to HTML using the transform.ToMath function. See %s. Content: %q" $.Position $.Inner -}}
+  {{- end -}}
+{{- else -}}
+  {{- with transform.ToMath .Inner (dict "output" "htmlAndMathml") -}}
+    {{- $.Page.Store.Set "hasMath" true -}}
+    {{- . -}}
+  {{- else -}}
+    {{- errorf "Unable to render mathematical markup to HTML using the transform.ToMath function. See %s. Content: %q" $.Position $.Inner -}}
+  {{- end -}}
+{{- end -}}

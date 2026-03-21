@@ -281,8 +281,6 @@
 
 body,
 body.list {
-    --site-background-overlay: rgba(255, 255, 255, 0.42);
-    --site-background-image: var(--site-background-image-light, none);
     position: relative;
     isolation: isolate;
     background: transparent;
@@ -297,12 +295,12 @@ body.list::before {
     pointer-events: none;
     background-color: var(--theme);
     background-image:
-        linear-gradient(var(--site-background-overlay), var(--site-background-overlay)),
-        var(--site-background-image, none);
+        linear-gradient(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18)),
+        var(--site-background-image-light, none);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    filter: saturate(1.04) contrast(1.02);
+    filter: saturate(1.08) contrast(1.06);
 }
 
 body > header,
@@ -312,10 +310,12 @@ body > footer {
     z-index: 1;
 }
 
-html[data-theme="dark"] body,
-html[data-theme="dark"] body.list {
-    --site-background-overlay: rgba(14, 16, 20, 0.78);
-    --site-background-image: var(--site-background-image-dark, var(--site-background-image-light, none));
+html[data-theme="dark"] body::before,
+html[data-theme="dark"] body.list::before {
+    background-image:
+        linear-gradient(rgba(14, 16, 20, 0.76), rgba(14, 16, 20, 0.76)),
+        var(--site-background-image-dark, var(--site-background-image-light, none));
+    filter: saturate(1.04) contrast(1.02);
 }
 
 .post-single {
@@ -334,6 +334,43 @@ html[data-theme="dark"] .post-single {
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
 }
 
+.post-header .post-tags-header {
+    margin-top: 14px;
+    margin-bottom: 0;
+}
+
+mark {
+    background: rgba(250, 221, 120, 0.72);
+    color: inherit;
+    padding: 0.08em 0.35em;
+    border-radius: 0.35em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+html[data-theme="dark"] mark {
+    background: rgba(250, 204, 21, 0.28);
+}
+
+.post-content .katex-display {
+    margin: 1.25rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.25rem 0;
+}
+
+.post-content .katex {
+    font-size: 1.04em;
+}
+
+.post-content code,
+.post-content pre code,
+.post-content .highlighttable,
+.post-content .highlighttable code,
+.copy-code {
+    font-family: var(--post-code-font);
+}
+
 @media (max-width: 640px) {
     .daily-controls {
         justify-content: stretch;
@@ -345,4 +382,7 @@ html[data-theme="dark"] .post-single {
     .view-switch button {
         flex: 1;
     }
+}
+:root {
+    --post-code-font: Consolas, "Cascadia Code", "SFMono-Regular", Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
 }
