@@ -1,54 +1,134 @@
-<div class="profile">
-    {{- with . -}}
-    <div class="profile_inner">
-        {{- $profileParams := .Params.profileMode -}}
-        {{- if $profileParams.imageUrl -}}
-            {{- $img := resources.Get $profileParams.imageUrl -}}
-            {{- if $img -}}
-                {{/* 自动转换并处理图片: 转换为 WebP 并缩放 */}}
-                {{- $img = $img.Fill (printf "%dx%d webp" ($profileParams.imageWidth | default 150) ($profileParams.imageHeight | default 150)) -}}
-                <img draggable="false" src="{{ $img.RelPermalink }}" 
-                    alt="{{ $profileParams.imageTitle | default "profile image" }}" 
-                    title="{{ $profileParams.imageTitle }}"
-                    height="{{ $profileParams.imageHeight | default 150 }}" 
-                    width="{{ $profileParams.imageWidth | default 150 }}" />
-            {{- else -}}
-                <img draggable="false" src="{{ $profileParams.imageUrl | absURL }}" 
-                    alt="{{ $profileParams.imageTitle | default "profile image" }}" 
-                    title="{{ $profileParams.imageTitle }}"
-                    height="{{ $profileParams.imageHeight | default 150 }}" 
-                    width="{{ $profileParams.imageWidth | default 150 }}" />
+{{- with . -}}
+{{- $profileParams := .Params.profileMode -}}
+{{- $rawContent := .RawContent | default "" -}}
+{{- $rawContent = replaceRE "\r\n" "\n" $rawContent -}}
+{{- $sections := slice -}}
+{{- range (split (trim $rawContent "\n\t ") "\n\n") -}}
+    {{- $section := trim . "\n\t " -}}
+    {{- if $section -}}
+        {{- $sections = $sections | append $section -}}
+    {{- end -}}
+{{- end -}}
+{{- $heroIntro := "" -}}
+{{- if gt (len $sections) 0 -}}
+    {{- $heroIntro = index $sections 0 -}}
+{{- end -}}
+{{- $contactItems := slice -}}
+{{- if gt (len $sections) 1 -}}
+    {{- $contactItems = after 1 $sections -}}
+{{- end -}}
+{{- $avatarSrc := $profileParams.imageUrl | relURL -}}
+{{- with resources.Get $profileParams.imageUrl -}}
+    {{- $processed := .Fill "420x420 webp" -}}
+    {{- $avatarSrc = $processed.RelPermalink -}}
+{{- end -}}
+
+<section class="home-landing" aria-labelledby="home-hero-title">
+    <div class="home-shell">
+        <div class="home-shell__glow home-shell__glow--left"></div>
+        <div class="home-shell__glow home-shell__glow--right"></div>
+
+        <header class="home-topbar">
+            <a class="home-brand" href="{{ "" | relLangURL }}">{{ site.Title }}</a>
+
+            <nav class="home-nav" aria-label="Home navigation">
+                <ul class="home-nav__list">
+                    {{- $currentPage := . -}}
+                    {{- range site.Menus.main -}}
+                    {{- $menuItemURL := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | relLangURL -}}
+                    {{- $pageURL := $currentPage.RelPermalink | relLangURL -}}
+                    <li>
+                        <a href="{{ .URL | relLangURL }}" class="home-nav__link{{ if eq $menuItemURL $pageURL }} is-active{{ end }}">
+                            {{ .Name }}
+                        </a>
+                    </li>
+                    {{- end -}}
+                </ul>
+            </nav>
+
+            <div class="home-topbar__actions">
+                <a class="home-icon-link" href="{{ "/about/" | relLangURL }}" aria-label="About me">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 21a8 8 0 0 0-16 0"></path>
+                        <circle cx="12" cy="8" r="4"></circle>
+                    </svg>
+                </a>
+                <button class="home-icon-link home-theme-toggle" id="home-theme-toggle" type="button" aria-label="Toggle theme">
+                    <svg class="home-theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2.5M12 19.5V22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12H22M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"></path>
+                    </svg>
+                    <svg class="home-theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="home-hero">
+            <div class="home-avatar-wrap">
+                <span class="home-orbit home-orbit--moon" aria-hidden="true">&#9790;</span>
+                <span class="home-orbit home-orbit--spark" aria-hidden="true">&#10022;</span>
+                <div class="home-avatar-frame">
+                    <img
+                        class="home-avatar"
+                        draggable="false"
+                        src="{{ $avatarSrc }}"
+                        alt="{{ $profileParams.imageTitle | default "profile image" }}"
+                        title="{{ $profileParams.imageTitle }}"
+                        height="{{ $profileParams.imageHeight | default 200 }}"
+                        width="{{ $profileParams.imageWidth | default 200 }}">
+                </div>
+            </div>
+
+            <div class="home-copy">
+                <h1 id="home-hero-title" class="home-title">{{ .Title | markdownify }}</h1>
+                {{- if $heroIntro -}}
+                <div class="home-subtitle">{{ $heroIntro | markdownify }}</div>
+                {{- end -}}
+
+                <div class="home-actions">
+                    <button class="home-cta home-cta--primary" type="button">Message Board</button>
+                    <a class="home-cta home-cta--secondary" href="{{ "/about/" | relLangURL }}">About me</a>
+                </div>
+            </div>
+        </div>
+
+        {{- if $contactItems -}}
+        <div class="home-contact-strip" aria-label="Profile contact information">
+            {{- range $contactItems -}}
+            <div class="home-contact-chip">{{ . | markdownify }}</div>
             {{- end -}}
+        </div>
         {{- end -}}
 
-        <h1>{{ .Title | markdownify }}</h1>
-        
-        {{/* 使用 .Content 来渲染 markdown 里的正文作为 Slogan */}}
-        <div class="profile-content">
-            {{ .Content }}
-        </div>
-
-        {{- partial "social_icons.html" (dict "Context" . "socialIcons" $profileParams.socialIcons) -}}
-
-        {{- with $profileParams.buttons -}}
-        <div class="buttons">
-            {{- range . }}
-            <a class="button" href="{{ trim .url " " }}" rel="noopener" title="{{ .name }}">
-                <span class="button-inner">
-                    {{ .name }}
-                    {{- if (findRE "://" .url) }}&nbsp;
-                    <svg fill="none" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" height="14" width="14">
-                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
-                        <path d="M15 3h6v6"></path>
-                        <path d="M10 14L21 3"></path>
-                    </svg>
-                    {{- end }}
-                </span>
-            </a>
-            {{- end }}
-        </div>
-        {{- end }}
+        <footer class="home-shell-footer">
+            <div class="home-shell-footer__brand">{{ site.Params.author | default site.Title }}</div>
+            <div class="home-shell-footer__status">
+                <span>&copy; {{ now.Year }} {{ site.Title }}</span>
+                <span>Powered by Hugo + PaperMod</span>
+            </div>
+        </footer>
     </div>
-    {{- end}}
-</div>
+</section>
+
+<script>
+    (() => {
+        const toggle = document.getElementById('home-theme-toggle');
+        if (!toggle) {
+            return;
+        }
+
+        toggle.addEventListener('click', () => {
+            const html = document.documentElement;
+            if (html.dataset.theme === 'dark') {
+                html.dataset.theme = 'light';
+                localStorage.setItem('pref-theme', 'light');
+            } else {
+                html.dataset.theme = 'dark';
+                localStorage.setItem('pref-theme', 'dark');
+            }
+        });
+    })();
+</script>
+{{- end -}}

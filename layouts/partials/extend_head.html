@@ -1,4 +1,10 @@
 {{- $noop := .WordCount -}}
+{{- if .IsHome -}}
+<script>
+    document.documentElement.classList.add('landing-home-page');
+</script>
+{{- end -}}
+
 {{- if .Page.Store.Get "hasMath" -}}
 <link
     rel="stylesheet"
