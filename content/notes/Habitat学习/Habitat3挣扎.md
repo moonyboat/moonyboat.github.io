@@ -7,23 +7,29 @@ tags:
   - Conda
 summary: "安装Habitat3的心路历程"
 ---
+
+## 代码运行准备
+
 ```bash
-source /home/zyg/anaconda3/etc/profile.d/conda.sh
+source .../anaconda3/etc/profile.d/conda.sh
 conda activate habitat3
 export LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libEGL_nvidia.so.0:/lib/x86_64-linux-gnu/libGLX_nvidia.so.0
 export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 export __NV_PRIME_RENDER_OFFLOAD=1
-python /home/zyg/habitat3_ws/habitat-lab/verify_display.py
+python ./habitat3_ws/habitat-lab/verify_display.py
 ```
 
+## 测试代码
 
 ```python
+# habitat3环境测试代码
+# verify_display.py
 import sys
 import os
 # 替换下面的路径为你实际的 egg 文件路径
-sys.path.append("/home/zyg/anaconda3/envs/habitat3/lib/python3.9/site-packages/habitat_sim-0.3.3-py3.9-linux-x86_64.egg")
+sys.path.append(".../anaconda3/envs/habitat3/lib/python3.9/site-packages/habitat_sim-0.3.3-py3.9-linux-x86_64.egg")
 import habitat_sim
 
 # 1. 场景路径
@@ -35,7 +41,7 @@ if not os.path.exists(test_scene):
 sim_cfg = habitat_sim.SimulatorConfiguration()
 sim_cfg.scene_id = test_scene
 sim_cfg.enable_physics = True
-# 尝试指定 GPU 0 (NVIDIA)
+# 尝试指定 GPU 0
 #sim_cfg.gpu_device_id = 0
 # 3. 配置传感器
 agent_cfg = habitat_sim.agent.AgentConfiguration()
@@ -47,9 +53,8 @@ rgb_sensor.resolution = [512, 512]
 rgb_sensor.position = [0.0, 1.5, 0.0]
 agent_cfg.sensor_specifications = [rgb_sensor]
 cfg = habitat_sim.Configuration(sim_cfg, [agent_cfg])
-print("🚀 正在尝试初始化仿真器 (Python版)...")
+print("🚀 正在尝试初始化仿真器...")
 try:
-# 这里是关键：看 Python 能否成功创建上下文
 sim = habitat_sim.Simulator(cfg)
 print("✅ 仿真器初始化成功！")
 # 尝试渲染一帧
@@ -57,7 +62,6 @@ agent = sim.initialize_agent(0)
 obs = sim.step("move_forward")
 if "color_sensor" in obs:
 print(f"✅ 成功获取图像数据！尺寸: {obs['color_sensor'].shape}")
-print("🎉 结论：你的环境可以正常运行 Python 代码！不用管 habitat-viewer 的报错了。")
 else:
 print("⚠️ 初始化成功但未获取到图像。")
 sim.close()
@@ -65,16 +69,17 @@ except Exception as e:
 print(f"❌ Python 初始化也失败了: {e}")
 ```
 
+## 下载官方数据集
 
 ```bash
-source /home/zyg/anaconda3/etc/profile.d/conda.sh
+source .../anaconda3/etc/profile.d/conda.sh
 conda activate habitat3
-cd /home/zyg/habitat3_ws/habitat-lab
+cd .../habitat3_ws/habitat-lab
 
+# 下载数据集
 python -m habitat_sim.utils.datasets_download --uids replica_cad_dataset --data-path data/
 python -m habitat_sim.utils.datasets_download --uids hab_fetch --data-path data/
 python -m habitat_sim.utils.datasets_download --uids ycb --data-path data/
-
 
 export LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libEGL_nvidia.so.0:/lib/x86_64-linux-gnu/libGLX_nvidia.so.0
@@ -98,10 +103,10 @@ ls -l data/datasets/replica_cad/rearrange
 
 ```
 
+## 官方故障排除文件 翻译版本
 
-trouble
 ```txt
-# 故障排除
+# trouble
 
 这是一份常见问题列表以及相应的故障排除提示。
 
@@ -196,22 +201,19 @@ NVIDIA A100 GPU可能会导致Habitat传感器在某些环境中渲染出黑色�
 
 运行sc0-3
 ```bash
-cd /home/zyg/habitat3_ws/habitat-lab
+cd .../habitat3_ws/habitat-lab
 conda activate habitat3
 
 # 如果你之前需要这个才能跑通渲染
 export __NV_PRIME_RENDER_OFFLOAD=1
-
 # sc0–sc2
 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=train
-
 # sc3
 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=val
-
-
 ```
-### habitat-hitl解决方案
-readme
+
+## habitat-hitl解决方案
+
 ```txt
 # 人机交互（HITL）框架
 HITL框架将真实的人类用户带入Habitat虚拟环境。利用该框架构建交互式桌面和虚拟现实（VR）应用程序，使用户能够与模拟机器人和其他虚拟代理进行交互。将这些应用程序部署给用户，以收集交互数据，用于代理评估和训练。
@@ -253,7 +255,6 @@ HITL框架由`habitat-hitl` Python库、示例[桌面应用程序](../examples/h
 HITL应用程序（以及一般的Habitat库）期望在运行位置（即当前工作目录）中有一个`data/`目录。请注意我们上述安装步骤中的`--data-path`参数。以下有两种选项可供考虑：
 1. 按照上述安装步骤，将数据下载到`habitat-lab/data`目录。这是许多Habitat教程和实用程序的默认位置。从此位置运行您的HITL应用程序，例如`habitat-lab/$ python /path/to/my_hitl_app/my_hitl_app.py`。
 2. 将数据下载（或使用符号链接）到您的HITL应用程序的根目录，例如`/path/to/my_hitl_app/data`。从此位置运行您的HITL应用程序，例如`/path/to/my_hitl_app/$ python my_hitl_app.py`
-
 
 ## 示例HITL应用
 请查看我们的示例HITL应用[点击此处](../examples/hitl/)。
@@ -327,9 +328,8 @@ See the latest version of the minimal app [here](../examples/hitl/minimal/).
 
 ```
 
-
 ```bash
-cd /home/zyg/habitat3_ws/habitat-lab
+cd .../habitat3_ws/habitat-lab
 conda activate habitat3
 export DISPLAY=:0
 export __NV_PRIME_RENDER_OFFLOAD=1
@@ -338,16 +338,12 @@ export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.js
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0
 SDL_VIDEODRIVER=x11 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=train
 
-
 python examples/interactive_play.py --cfg benchmark/rearrange/play/play.yaml habitat.dataset.split=train --no-render --save-obs --save-obs-fname sc0_sc2.mp4
-
-
 ```
 
 修改了源文件
-![](images/Pasted%20image%2020260115170613.png)![](images/Pasted%20image%2020260115171619.png)
-
-
+![](images/Pasted%20image%2020260115170613.png)
+![](images/Pasted%20image%2020260115171619.png)
 
 ```bash
 # 新的修改
@@ -366,7 +362,7 @@ python examples/interactive_play.py --no-render --save-obs --save-obs-fname play
 
 
 # 一直渲染111
-cd /home/zyg/habitat3_ws/habitat-lab
+cd .../habitat3_ws/habitat-lab
 conda activate habitat3
 export DISPLAY=:0
 export __NV_PRIME_RENDER_OFFLOAD=1
@@ -377,8 +373,7 @@ export SDL_VIDEODRIVER=x11
 python examples/interactive_play.py --never-end
 
 
-
-# pygame heiping 
+# pygame helping 
 # nb!!!!!!!!!!!!
 # 这个是好的，可以现在pygame完全实现了！！！
 export SDL_VIDEODRIVER=x11
@@ -390,9 +385,13 @@ python examples/interactive_play.py --never-end
 ![](images/Pasted%20image%2020260115174428.png)
 ![](images/Pasted%20image%2020260115174620.png)
 ```txt
-使用I/J/K/L键可控制机器人底座向前/向左/向后/向右移动，使用W/A/S/D键可控制手臂末端执行器向前/向左/向后/向右移动，使用E/Q键可控制手臂上下移动。通过末端执行器控制手臂可能较难操作。更多详情请参阅文档。尝试移动底座和手臂，使其触碰桌上的红色碗。祝您愉快！
+使用I/J/K/L键可控制机器人底座向前/向左/向后/向右移动，使用W/A/S/D键可控制手臂末端执行器向前/向左/向后/向右移动，使用E/Q键可控制手臂上下移动。
+通过末端执行器控制手臂可能较难操作。更多详情请参阅文档。
+尝试移动底座和手臂，使其触碰桌上的红色碗。祝您愉快！
 
-注意：当前在Ubuntu 20.04上，交互式测试会失败，并报错：X错误：请求失败：BadAccess（尝试访问私有资源被拒绝）。我们正在努力修复此问题，一旦修复完成，将立即更新相关说明。该脚本在MacOS上运行正常，无报错。
+注意：当前在Ubuntu 20.04上，交互式测试会失败，并报错：X错误：请求失败：BadAccess（尝试访问私有资源被拒绝）。
+我们正在努力修复此问题，一旦修复完成，将立即更新相关说明。该
+脚本在MacOS上运行正常，无报错。
 ```
 
 ## 环境对比
@@ -405,7 +404,7 @@ python examples/interactive_play.py --never-end
 |**CONDA_PREFIX**|`.../envs/habitat3`|`.../anaconda3`|环境路径|
 |**CONDA_SHLVL**|`2`|`1`|嵌套层级|
 |**CONDA_PROMPT_MODIFIER**|`(habitat3)`|`(base)`|终端提示符|
-|**PATH**|`/home/zyg/anaconda3/envs/habitat3/bin:...` (habitat优先)|`/home/zyg/anaconda3/bin:...` (base优先)|可执行程序搜索顺序|
+|**PATH**|`.../anaconda3/envs/habitat3/bin:...` (habitat优先)|`.../anaconda3/bin:...` (base优先)|可执行程序搜索顺序|
 |**LD_LIBRARY_PATH**|`/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu`|`/opt/ros/humble/...:/opt/ros/humble/lib`|**关键差异**：habitat3 指向系统库，base 指向 ROS 库|
 |**GSETTINGS_SCHEMA_DIR**|`.../envs/habitat3/share/glib-2.0/schemas`|`.../anaconda3/share/glib-2.0/schemas`|GNOME 配置路径|
 |**SYSTEMD_EXEC_PID**|`2243`|`11268`|进程 PID (运行时的随机差异)|
@@ -413,10 +412,10 @@ python examples/interactive_play.py --never-end
 
 ---
 
-### 2. (habitat3) 独有的变量 (在 base 中不存在)
+### 2. (habitat3) 独有的变量
 
 **这些全部是为 Habitat 仿真器配置的图形驱动和渲染参数：**
-- `CONDA_PREFIX_1="/home/zyg/anaconda3"` (记录上一级环境路径)
+- `CONDA_PREFIX_1=".../anaconda3"` (记录上一级环境路径，路径后面手动改过，注意！)
 - **显卡驱动强制加载:**
     - `LD_PRELOAD="/lib/x86_64-linux-gnu/libGLX_nvidia.so.0:/lib/x86_64-linux-gnu/libEGL_nvidia.so.0"`
 - **SDL (仿真器窗口) 配置:**
@@ -424,7 +423,7 @@ python examples/interactive_play.py --never-end
     - `SDL_VIDEODRIVER="x11"`
     - `SDL_VIDEO_X11_FORCE_EGL="1"`
 - **NVIDIA / EGL 厂商配置:**
-    - `__EGL_VENDOR_LIBRARY_DIRS="/home/zyg/anaconda3/envs/habitat3/share/glvnd/egl_vendor.d"`
+    - `__EGL_VENDOR_LIBRARY_DIRS=".../anaconda3/envs/habitat3/share/glvnd/egl_vendor.d"`
     - `__EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/10_nvidia.json"`
     - `__GLX_VENDOR_LIBRARY_NAME="nvidia"`
     - `__NV_PRIME_RENDER_OFFLOAD="1"`

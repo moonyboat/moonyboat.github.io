@@ -11,7 +11,7 @@ Habitat官方发布的视频教程以及colab例程代码，学习记录。视�
 
 # 核心目标
  
- 核心目标是为具身 AI (embodied AI)提供一个 **高性能、真实感、可扩展的 3D 模拟平台**，让研究者可以在虚拟室内环境中训练/测试智能体 (agent) — 包括视觉 (RGB / 深度 / 语义等 sensors)、导航 (navigation)、感知 (perception)、动作 (movement) 等。 
+ 核心目标是为具身 AI (embodied AI)提供一个 **高性能、真实感、可扩展的 3D 模拟平台**，让研究者可以在虚拟室内环境中训练/测试智能体 (agent) — 包括视觉 (RGB / 深度 / 语义等 sensors)、导航 (navigation)、感知 (perception)、动作 (movement) 等。
 
 架构分为两部分 (即 “底层 + 上层”)：
 - **Habitat‑Sim** — 高性能 3D 模拟器 ，负责场景渲染、sensor 模拟 (RGB, depth, semantics…)、agent 配置 (相机、碰撞、运动…) 以及对多种 3D 数据集 (e.g. Matterport3D, Gibson 等) 的支持。

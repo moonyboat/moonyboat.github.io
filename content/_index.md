@@ -14,11 +14,11 @@ params:
 
 这里是一句你的个人Slogan
 
-🏫 **学校**: 预留
+🏫 **学校**: 东北大学
 
 📍 **位置**: 中国·沈阳
 
-✉️ **邮箱**: [xxx@example.com](mailto:预留邮箱@example.com)
+✉️ **邮箱**: [2523710142@qq.com](mailto:2523710142@qq.com)
 
 💬 **QQ**  : [2523710142](tencent://message/?uin=2523710142)
 
